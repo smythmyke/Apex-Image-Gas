@@ -175,3 +175,117 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+// Enhanced Image Interactions
+document.querySelectorAll('.product-image-container').forEach(container => {
+  const img = container.querySelector('.product-image');
+  
+  container.addEventListener('click', () => {
+    const modal = document.createElement('div');
+    modal.className = 'image-modal';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <img src="${img.src}" alt="${img.alt}">
+        <button class="close-modal">×</button>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+    
+    modal.querySelector('.close-modal').onclick = () => {
+      modal.remove();
+      document.body.style.overflow = '';
+    };
+    
+    modal.onclick = (e) => {
+      if (e.target === modal) {
+        modal.remove();
+        document.body.style.overflow = '';
+      }
+    };
+  });
+});
+
+// Add modal styles
+const modalStyle = document.createElement('style');
+modalStyle.textContent = `
+  .image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+  }
+  
+  .modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90vh;
+  }
+  
+  .modal-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+  
+  .close-modal {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 36px;
+    cursor: pointer;
+    padding: 10px;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+`;
+document.head.appendChild(modalStyle);
+
+// Enhanced Form Interactions
+const formInputs = document.querySelectorAll('.form-group input');
+formInputs.forEach(input => {
+  input.addEventListener('focus', () => {
+    input.parentElement.classList.add('focused');
+  });
+  
+  input.addEventListener('blur', () => {
+    input.parentElement.classList.remove('focused');
+    if (input.value.trim()) {
+      input.classList.add('filled');
+    } else {
+      input.classList.remove('filled');
+    }
+  });
+});
+
+// Smooth scroll for navigation
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetId = link.getAttribute('href');
+    const targetElement = document.querySelector(targetId);
+    
+    if (targetElement) {
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
