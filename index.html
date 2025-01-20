@@ -21,31 +21,92 @@
 
   <main>
     <section id="hero">
-      <h2>High-Performance Gas Bottles for EOS 3.5 X-Ray Machines</h2>
+      <h2>Specialized Gas Mixture for EOS 3.5 X-Ray Machines</h2>
+      <p class="hero-subtitle">1 Liter 3.7% Ethane BAL Xenon - Optimized for Clear X-ray Imaging</p>
       <div id="paypal-buttons"></div>
     </section>
 
     <section id="about">
       <h3>About Our Product</h3>
-      <p>Our specialized gas bottles are engineered for optimal performance in EOS 3.5 X-Ray machines...</p>
+      <p>Our precisely engineered gas mixture is specifically formulated for optimal performance in EOS 3.5 X-ray machines. The carefully balanced composition of 3.7% Ethane with Xenon ensures superior image clarity and consistent results in your diagnostic imaging procedures.</p>
+      
+      <div class="specifications">
+        <h4>Technical Specifications:</h4>
+        <ul>
+          <li>Volume: 1 Liter</li>
+          <li>Composition: 3.7% Ethane, Balance Xenon</li>
+          <li>Purity Level: Medical Grade</li>
+          <li>Compatible with: EOS 3.5 X-ray Machine</li>
+          <li>Bottle Type: High-pressure certified medical gas container</li>
+        </ul>
+      </div>
     </section>
 
     <section id="product">
       <h3>Product Details</h3>
-      <div class="product-images">
-        <img src="images/gas-bottle-1.jpg" alt="Gas bottle front view">
-        <img src="images/gas-bottle-2.jpg" alt="Gas bottle side view">
-        <img src="images/gas-bottle-3.jpg" alt="Gas bottle in use">
-      </div>
-      <ul>
-        <li>High-purity gas formulation</li>
-        <li>Extended lifespan</li>
-        <li>Precision-engineered valves</li>
+      <ul class="product-features">
+        <li><strong>Optimized Mixture:</strong> Precisely balanced 3.7% Ethane with Xenon for optimal image clarity</li>
+        <li><strong>Quality Assurance:</strong> Each bottle undergoes rigorous testing and certification</li>
+        <li><strong>Safety Features:</strong> Equipment-specific valves and connections for secure installation</li>
+        <li><strong>Traceability:</strong> Individual lot numbering and quality certification</li>
+        <li><strong>Compliance:</strong> Meets all medical gas regulations and safety standards</li>
       </ul>
+
+      <div class="product-images">
+        <div class="product-image-container">
+          <img src="images/1_bottle.jpg" alt="Single Gas Bottle" class="product-image">
+          <p class="image-caption">Single Gas Bottle Configuration</p>
+        </div>
+        <div class="product-image-container">
+          <img src="images/3_bottles1.jpg" alt="Triple Gas Bottle Setup - View 1" class="product-image">
+          <p class="image-caption">Triple Gas Bottle Setup - Front View</p>
+        </div>
+        <div class="product-image-container">
+          <img src="images/3_bottles2.jpg" alt="Triple Gas Bottle Setup - View 2" class="product-image">
+          <p class="image-caption">Triple Gas Bottle Setup - Side View</p>
+        </div>
+      </div>
+
+      <div class="safety-notice">
+        <h4>Safety Information</h4>
+        <p>This medical gas mixture should only be handled by qualified personnel. Always follow proper safety protocols and manufacturer guidelines for installation and use. Each bottle comes with detailed safety documentation and handling instructions.</p>
+      </div>
     </section>
 
     <section id="pricing">
       <h3>Pricing Options</h3>
+      <div class="delivery-info">
+        <h4>Delivery Process</h4>
+        <p>For your security and convenience:</p>
+        <ol>
+          <li>Once you submit your order, we'll process your delivery request</li>
+          <li>We'll ship the gas bottle to your specified address</li>
+          <li>You'll receive a tracking number via email</li>
+          <li>Only after you confirm receipt of the bottle will your payment be processed</li>
+        </ol>
+      </div>
+
+      <div class="business-form">
+        <h4>Business Information</h4>
+        <form id="businessInfoForm">
+          <div class="form-group">
+            <input type="text" id="companyName" placeholder="Company Name" required>
+          </div>
+          <div class="form-group">
+            <input type="text" id="contactName" placeholder="Contact Name" required>
+          </div>
+          <div class="form-group">
+            <input type="tel" id="phoneNumber" placeholder="Phone Number" required>
+          </div>
+          <div class="form-group">
+            <input type="email" id="businessEmail" placeholder="Business Email" required>
+          </div>
+          <div class="form-note">
+            <p>* Additional shipping details will be collected during checkout</p>
+          </div>
+        </form>
+      </div>
+
       <div class="pricing-options">
         <div class="option">
           <h4>Single Purchase</h4>
@@ -72,14 +133,24 @@
   </main>
 
   <footer>
-    <p>&copy; 2024 Apex Gas. All rights reserved.</p>
-    <ul>
-      <li><a href="terms.html">Terms of Service</a></li>
-      <li><a href="privacy.html">Privacy Policy</a></li>
-    </ul>
+    <div class="footer-content">
+      <div class="footer-contact">
+        <h4>Contact Information</h4>
+        <p>Michael W. Smith, Owner</p>
+        <p>Email: <a href="mailto:smythmyke@gmail.com">smythmyke@gmail.com</a></p>
+        <p>Phone: <a href="tel:214-400-3781">214-400-3781</a></p>
+      </div>
+      <div class="footer-legal">
+        <p>&copy; 2024 Apex Gas. All rights reserved.</p>
+        <ul>
+          <li><a href="terms.html">Terms of Service</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
   </footer>
 
-  <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
-    <script src="app.js"></script>
-  </body>
+  <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD&intent=capture"></script>
+  <script src="app.js"></script>
+</body>
 </html>
