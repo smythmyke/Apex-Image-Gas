@@ -57,10 +57,10 @@ document.querySelectorAll('.paypal-button').forEach(button => {
   paypal.Buttons({
     style: {
       layout: 'vertical',
-      color: 'blue',
-      shape: 'rect',
-      label: 'pay'
+      label: 'paypal',
+      height: 40
     },
+    fundingSource: paypal.FUNDING.PAYPAL,
     onClick: function(data, actions) {
       const businessInfo = validateBusinessForm();
       if (!businessInfo) {
@@ -89,7 +89,12 @@ document.querySelectorAll('.paypal-button').forEach(button => {
           custom_id: JSON.stringify(businessInfo)
         }],
         application_context: {
-          shipping_preference: 'GET_FROM_FILE'
+          shipping_preference: 'GET_FROM_FILE',
+          user_action: 'CONTINUE',
+          payment_method: {
+            payee_preferred: 'IMMEDIATE_PAYMENT_REQUIRED',
+            payer_selected: 'PAYPAL'
+          }
         }
       });
     },
