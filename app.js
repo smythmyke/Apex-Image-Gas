@@ -57,10 +57,17 @@ document.querySelectorAll('.paypal-button').forEach(button => {
   paypal.Buttons({
     style: {
       layout: 'vertical',
-      label: 'paypal',
-      height: 40
+      shape: 'rect',
+      color: 'gold'
     },
-    fundingSource: paypal.FUNDING.PAYPAL,
+    funding: {
+      allowed: [
+        paypal.FUNDING.PAYPAL,
+        paypal.FUNDING.CARD,
+        paypal.FUNDING.CREDIT
+      ],
+      disallowed: []
+    },
     onClick: function(data, actions) {
       const businessInfo = validateBusinessForm();
       if (!businessInfo) {
