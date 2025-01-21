@@ -52,93 +52,156 @@ function showTransactionMessage(message, isError = false) {
 // Remove PayPal buttons from hero section
 document.getElementById('paypal-buttons').remove();
 
-// Initialize pricing section buttons
-document.querySelectorAll('.paypal-button').forEach(button => {
-  paypal.Buttons({
-    style: {
-      layout: 'vertical',
-      shape: 'rect',
-      color: 'gold'
-    },
-    funding: {
-      allowed: [
-        paypal.FUNDING.PAYPAL,
-        paypal.FUNDING.CARD,
-        paypal.FUNDING.CREDIT
-      ],
-      disallowed: []
-    },
-    onClick: function(data, actions) {
-      const businessInfo = validateBusinessForm();
-      if (!businessInfo) {
-        return false;
-      }
-      return true;
-    },
-    createOrder: function(data, actions) {
-      const businessInfo = validateBusinessForm();
-      if (!businessInfo) {
-        return false;
-      }
+// Initialize PayPal SDK with explicit configuration
+const initializePayPal = () => {
+  try {
+    // Explicitly set publicPath for PayPal SDK
+    __webpack_public_path__ = 'https://www.paypal.com/sdk/js';
 
-      const price = parseFloat(button.dataset.price);
-      const description = price === 9999 ? 
-        '1L Gas Bottle - Single Purchase' : 
-        '1L Gas Bottle - Annual Subscription';
-      
-      return actions.order.create({
-        purchase_units: [{
-          description: description,
-          amount: {
-            currency_code: 'USD',
-            value: price.toFixed(2)
-          },
-          custom_id: JSON.stringify(businessInfo)
-        }],
-        application_context: {
-          shipping_preference: 'GET_FROM_FILE',
-          user_action: 'CONTINUE',
-          payment_method: {
-            payee_preferred: 'IMMEDIATE_PAYMENT_REQUIRED',
-            payer_selected: 'PAYPAL'
-          }
-        }
-      });
-    },
-    onApprove: function(data, actions) {
-      return actions.order.capture()
-        .then(function(details) {
-          // Combine business info with shipping details
-          const businessInfo = JSON.parse(details.purchase_units[0].custom_id);
-          const shippingInfo = details.purchase_units[0].shipping;
-          
-          const message = `
-            Transaction completed successfully! 
-            Our team will contact ${businessInfo.contactName} at ${businessInfo.companyName} 
-            via ${businessInfo.businessEmail} or ${businessInfo.phoneNumber} 
-            to coordinate delivery to:
-            ${shippingInfo.name.full_name}
-            ${shippingInfo.address.address_line_1}
-            ${shippingInfo.address.admin_area_2}, ${shippingInfo.address.admin_area_1} ${shippingInfo.address.postal_code}
-            ${shippingInfo.address.country_code}
-          `;
-          
-          showTransactionMessage(message);
-          
-          // Clear the form after successful transaction
-          document.getElementById('businessInfoForm').reset();
-        })
-        .catch(function(error) {
-          console.error('Transaction failed:', error);
-          showTransactionMessage('Transaction failed. Please try again or contact support.', true);
-        });
-    },
-    onError: function(err) {
-      console.error('PayPal Error:', err);
-      showTransactionMessage('There was an error processing your payment. Please try again.', true);
+    // Check if PayPal SDK is loaded
+    if (!window.paypal) {
+      throw new Error('PayPal SDK failed to load');
     }
-  }).render(button);
-});
+
+    // Initialize buttons
+    document.querySelectorAll('.paypal-button').forEach(button => {
+      paypal.Buttons({
+        style: {
+          layout: 'vertical',
+          shape: 'rect',
+          color: 'gold'
+        },
+        funding: {
+          allowed: [
+            paypal.FUNDING.PAYPAL,
+            paypal.FUNDING.CARD,
+            paypal.FUNDING.CREDIT
+          ],
+          disallowed: []
+        },
+      onClick: function(data, actions) {
+        try {
+          const businessInfo = validateBusinessForm();
+          if (!businessInfo) {
+            return false;
+          }
+          
+          // Store business info in memory instead of storage
+          window.tempBusinessInfo = businessInfo;
+          return true;
+        } catch (error) {
+          console.error('PayPal onClick error:', error);
+          showTransactionMessage('Error validating form. Please try again.', true);
+          return false;
+        }
+      },
+      createOrder: function(data, actions) {
+        try {
+          const businessInfo = window.tempBusinessInfo || validateBusinessForm();
+          if (!businessInfo) {
+            throw new Error('Business information is required');
+          }
+
+          const price = parseFloat(button.dataset.price);
+          if (isNaN(price)) {
+            throw new Error('Invalid price');
+          }
+
+          const description = price === 9999 ? 
+            '1L Gas Bottle - Single Purchase' : 
+            '1L Gas Bottle - Annual Subscription';
+          
+          return actions.order.create({
+            purchase_units: [{
+              description: description,
+              amount: {
+                currency_code: 'USD',
+                value: price.toFixed(2)
+              },
+              custom_id: JSON.stringify(businessInfo)
+            }],
+            application_context: {
+              shipping_preference: 'NO_SHIPPING',
+              user_action: 'CONTINUE',
+              payment_method: {
+                payee_preferred: 'IMMEDIATE_PAYMENT_REQUIRED',
+                payer_selected: 'PAYPAL'
+              }
+            }
+          });
+        } catch (error) {
+          console.error('PayPal createOrder error:', error);
+          showTransactionMessage('Error creating order. Please try again.', true);
+          throw error;
+        }
+      },
+      onApprove: function(data, actions) {
+        return actions.order.capture()
+          .then(function(details) {
+            try {
+              // Combine business info with shipping details
+              const businessInfo = JSON.parse(details.purchase_units[0].custom_id);
+              
+              let message = `
+                Transaction completed successfully! 
+                Our team will contact ${businessInfo.contactName} at ${businessInfo.companyName} 
+                via ${businessInfo.businessEmail} or ${businessInfo.phoneNumber} to coordinate delivery.
+              `;
+
+              // Handle shipping info if available
+              if (details.purchase_units[0].shipping) {
+                const shippingInfo = details.purchase_units[0].shipping;
+                message += `
+                  Delivery address:
+                  ${shippingInfo.name.full_name}
+                  ${shippingInfo.address.address_line_1}
+                  ${shippingInfo.address.admin_area_2}, ${shippingInfo.address.admin_area_1} ${shippingInfo.address.postal_code}
+                  ${shippingInfo.address.country_code}
+                `;
+              }
+              
+              showTransactionMessage(message);
+              
+              // Clear temporary storage and form
+              delete window.tempBusinessInfo;
+              document.getElementById('businessInfoForm').reset();
+            } catch (error) {
+              console.error('Error processing approval:', error);
+              showTransactionMessage('Error processing transaction. Please contact support.', true);
+            }
+          })
+          .catch(function(error) {
+            console.error('Transaction failed:', error);
+            showTransactionMessage('Transaction failed. Please try again or contact support.', true);
+          });
+      },
+      onError: function(err) {
+        console.error('PayPal Error:', err);
+        showTransactionMessage('There was an error processing your payment. Please try again.', true);
+      }
+    }).render(button);
+  });
+} catch (error) {
+  console.error('PayPal initialization error:', error);
+  showTransactionMessage('Payment system initialization failed. Please contact support.', true);
+}
+};
+
+// Initialize PayPal when SDK is loaded
+if (window.paypal) {
+  initializePayPal();
+} else {
+  // Fallback if PayPal SDK fails to load
+  document.querySelectorAll('.paypal-button').forEach(button => {
+    button.innerHTML = `
+      <div class="payment-fallback">
+        <p>Payment system is currently unavailable</p>
+        <p>Please contact us directly to complete your purchase</p>
+        <a href="mailto:smythmyke@gmail.com" class="contact-link">Contact Us</a>
+      </div>
+    `;
+  });
+}
 
 // Add styles for transaction messages
 const style = document.createElement('style');
