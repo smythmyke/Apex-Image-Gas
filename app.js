@@ -74,16 +74,6 @@ window.addEventListener('paypal-ready', () => {
       },
       env: 'sandbox',
       onClick: (data, actions) => {
-        const businessInfo = validateBusinessForm();
-        if (!businessInfo) {
-          const form = document.getElementById('businessInfoForm');
-          if (form) {
-            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-          return false;
-        }
-        // Store business info for later use
-        button.dataset.businessInfo = JSON.stringify(businessInfo);
         return true;
       },
       createOrder: (data, actions) => {
@@ -93,7 +83,7 @@ window.addEventListener('paypal-ready', () => {
             throw new Error('Invalid price');
           }
 
-          const businessInfo = JSON.parse(button.dataset.businessInfo);
+          // Business info will be collected by PayPal
           // Handle subscription vs one-time purchase
           if (button.id === 'paypal-subscription') {
             return actions.subscription.create({
@@ -127,7 +117,7 @@ window.addEventListener('paypal-ready', () => {
                   inclusive: false
                 }
               },
-              custom_id: button.dataset.businessInfo,
+              custom_id: 'subscription_' + Date.now(),
               application_context: {
                 shipping_preference: 'GET_FROM_FILE',
                 user_action: 'SUBSCRIBE_NOW',
@@ -135,17 +125,7 @@ window.addEventListener('paypal-ready', () => {
                 landing_page: 'BILLING',
                 user_experience: 'MINIMAL'
               },
-              subscriber: {
-                name: {
-                  given_name: businessInfo.contactName
-                },
-                email_address: businessInfo.businessEmail,
-                shipping_address: {
-                  name: {
-                    full_name: businessInfo.contactName
-                  }
-                }
-              }
+              subscriber: {}
             });
           }
 
@@ -158,18 +138,7 @@ window.addEventListener('paypal-ready', () => {
                 currency_code: 'USD',
                 value: price.toFixed(2)
               },
-              custom_id: button.dataset.businessInfo,
-              shipping: {
-                name: {
-                  full_name: businessInfo.contactName
-                },
-                email_address: businessInfo.businessEmail,
-                phone: {
-                  phone_number: {
-                    national_number: businessInfo.phoneNumber.replace(/\D/g, '')
-                  }
-                }
-              }
+              custom_id: 'purchase_' + Date.now()
             }],
             application_context: {
               shipping_preference: 'GET_FROM_FILE',
@@ -192,8 +161,7 @@ window.addEventListener('paypal-ready', () => {
         if (button.id === 'paypal-subscription') {
           return actions.subscription.get()
             .then((details) => {
-              const businessInfo = JSON.parse(button.dataset.businessInfo);
-              const message = `Annual subscription activated successfully! Our team will contact ${businessInfo.contactName} at ${businessInfo.companyName} via ${businessInfo.businessEmail} to coordinate your first delivery.`;
+              const message = `Annual subscription activated successfully! Our team will contact you at ${details.subscriber.email_address} to coordinate your first delivery.`;
               showTransactionMessage(message);
               const form = document.getElementById('businessInfoForm');
               if (form) {
@@ -209,8 +177,7 @@ window.addEventListener('paypal-ready', () => {
         // Handle one-time purchase approval
         return actions.order.capture()
           .then((details) => {
-            const businessInfo = JSON.parse(button.dataset.businessInfo);
-            const message = `Transaction completed successfully! Our team will contact ${businessInfo.contactName} at ${businessInfo.companyName} via ${businessInfo.businessEmail} to coordinate delivery.`;
+              const message = `Transaction completed successfully! Our team will contact you at ${details.payer.email_address} to coordinate delivery.`;
             showTransactionMessage(message);
             const form = document.getElementById('businessInfoForm');
             if (form) {
