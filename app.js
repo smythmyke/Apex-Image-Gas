@@ -129,13 +129,11 @@ window.addEventListener('paypal-ready', () => {
               },
               custom_id: button.dataset.businessInfo,
               application_context: {
-                shipping_preference: 'SET_PROVIDED_ADDRESS',
+                shipping_preference: 'GET_FROM_FILE',
                 user_action: 'SUBSCRIBE_NOW',
                 brand_name: 'Apex Image Gas',
-                payment_method: {
-                  payer_selected: 'PAYPAL',
-                  payee_preferred: 'IMMEDIATE_PAYMENT_REQUIRED'
-                }
+                landing_page: 'BILLING',
+                user_experience: 'MINIMAL'
               },
               subscriber: {
                 name: {
@@ -174,10 +172,10 @@ window.addEventListener('paypal-ready', () => {
               }
             }],
             application_context: {
-              shipping_preference: 'SET_PROVIDED_ADDRESS',
+              shipping_preference: 'GET_FROM_FILE',
               user_action: 'PAY_NOW',
               brand_name: 'Apex Image Gas',
-              landing_page: 'NO_PREFERENCE',
+              landing_page: 'BILLING',
               user_experience: 'MINIMAL'
             }
           });
