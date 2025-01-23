@@ -339,7 +339,25 @@
     </div>
   </footer>
 
-  <script src="https://www.paypal.com/sdk/js?client-id=AfkK4GfeMlkjZ_H11vqWTlh7IfbZecUNK6qSrxjx2KG_tbmt2zGEjtDS5QDmsANiYpv9drN0XbBvtIJ6&currency=USD&intent=capture&components=buttons,funding-eligibility"></script>
-  <script src="app.js"></script>
+  <script>
+    // Load PayPal script dynamically
+    const loadPayPalScript = () => {
+      const script = document.createElement('script');
+      script.src = 'https://www.paypal.com/sdk/js?client-id=AfkK4GfeMlkjZ_H11vqWTlh7IfbZecUNK6qSrxjx2KG_tbmt2zGEjtDS5QDmsANiYpv9drN0XbBvtIJ6&currency=USD&intent=capture';
+      script.async = true;
+      script.onload = () => {
+        console.log('PayPal script loaded successfully');
+      };
+      script.onerror = (error) => {
+        console.error('Error loading PayPal script:', error);
+        document.querySelectorAll('.paypal-button').forEach(button => {
+          button.innerHTML = '<p class="text-red-600">Payment system temporarily unavailable. Please try again later.</p>';
+        });
+      };
+      document.body.appendChild(script);
+    };
+    window.addEventListener('load', loadPayPalScript);
+  </script>
+  <script src="app.js" defer></script>
 </body>
 </html>
