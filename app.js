@@ -1,35 +1,47 @@
 // Validate business information form
 function validateBusinessForm() {
-  const companyName = document.getElementById('companyName').value.trim();
-  const contactName = document.getElementById('contactName').value.trim();
-  const phoneNumber = document.getElementById('phoneNumber').value.trim();
-  const businessEmail = document.getElementById('businessEmail').value.trim();
+  try {
+    const form = document.getElementById('businessInfoForm');
+    if (!form) {
+      showTransactionMessage('Please fill out the business information form before proceeding.', true);
+      return false;
+    }
 
-  if (!companyName || !contactName || !phoneNumber || !businessEmail) {
-    showTransactionMessage('Please fill in all business information fields before proceeding.', true);
+    const companyName = form.querySelector('[name="companyName"]')?.value.trim();
+    const contactName = form.querySelector('[name="contactName"]')?.value.trim();
+    const phoneNumber = form.querySelector('[name="phoneNumber"]')?.value.trim();
+    const businessEmail = form.querySelector('[name="businessEmail"]')?.value.trim();
+
+    if (!companyName || !contactName || !phoneNumber || !businessEmail) {
+      showTransactionMessage('Please fill in all business information fields before proceeding.', true);
+      return false;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(businessEmail)) {
+      showTransactionMessage('Please enter a valid business email address.', true);
+      return false;
+    }
+
+    // Basic phone validation (allows various formats)
+    const phoneRegex = /^[\d\s\-\(\)]+$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      showTransactionMessage('Please enter a valid phone number.', true);
+      return false;
+    }
+
+    return {
+      companyName,
+      contactName,
+      phoneNumber,
+      businessEmail
+    };
+  } catch (error) {
+    console.error('Form validation error:', error);
+    showTransactionMessage('Please fill out the business information form before proceeding.', true);
     return false;
   }
-
-  // Basic email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(businessEmail)) {
-    showTransactionMessage('Please enter a valid business email address.', true);
-    return false;
-  }
-
-  // Basic phone validation (allows various formats)
-  const phoneRegex = /^[\d\s\-\(\)]+$/;
-  if (!phoneRegex.test(phoneNumber)) {
-    showTransactionMessage('Please enter a valid phone number.', true);
-    return false;
-  }
-
-  return {
-    companyName,
-    contactName,
-    phoneNumber,
-    businessEmail
-  };
 }
 
 // Show transaction status
@@ -52,30 +64,34 @@ function showTransactionMessage(message, isError = false) {
 // Initialize PayPal buttons when ready
 window.addEventListener('paypal-ready', () => {
   document.querySelectorAll('.paypal-button').forEach(button => {
-    paypal.Buttons({
-        style: {
-          layout: 'vertical',
-          shape: 'rect',
-          color: 'gold'
-        },
-        funding: {
-          allowed: [
-            paypal.FUNDING.PAYPAL,
-            paypal.FUNDING.CARD,
-            paypal.FUNDING.CREDIT
-          ],
-          disallowed: []
-        },
-        onClick: (data, actions) => {
-          const businessInfo = validateBusinessForm();
-          if (!businessInfo) {
-            return false;
+    const buttonConfig = {
+      style: {
+        layout: 'vertical',
+        shape: 'rect',
+        color: 'gold'
+      },
+      funding: {
+        allowed: [
+          paypal.FUNDING.PAYPAL,
+          paypal.FUNDING.CARD
+        ],
+        disallowed: []
+      },
+      onClick: (data, actions) => {
+        const businessInfo = validateBusinessForm();
+        if (!businessInfo) {
+          const form = document.getElementById('businessInfoForm');
+          if (form) {
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
-          // Store business info for later use
-          button.dataset.businessInfo = JSON.stringify(businessInfo);
-          return true;
-        },
-        createOrder: (data, actions) => {
+          return false;
+        }
+        // Store business info for later use
+        button.dataset.businessInfo = JSON.stringify(businessInfo);
+        return true;
+      },
+      createOrder: (data, actions) => {
+        try {
           const price = parseFloat(button.dataset.price);
           if (isNaN(price)) {
             throw new Error('Invalid price');
@@ -105,35 +121,51 @@ window.addEventListener('paypal-ready', () => {
             }],
             application_context: {
               shipping_preference: 'SET_PROVIDED_ADDRESS',
-              user_action: 'PAY_NOW'
+              user_action: 'PAY_NOW',
+              brand_name: 'Apex Image Gas',
+              landing_page: 'NO_PREFERENCE',
+              user_experience: 'MINIMAL'
             }
           });
-        },
-        onApprove: (data, actions) => {
-          return actions.order.capture()
-            .then((details) => {
-              const businessInfo = JSON.parse(button.dataset.businessInfo);
-              const message = `Transaction completed successfully! Our team will contact ${businessInfo.contactName} at ${businessInfo.companyName} via ${businessInfo.businessEmail} to coordinate delivery.`;
-              showTransactionMessage(message);
-              document.getElementById('businessInfoForm').reset();
-            })
-            .catch((error) => {
-              console.error('Payment capture failed:', error);
-              showTransactionMessage('There was an error processing your payment. Please try again or contact support.', true);
-            });
-        },
-        onError: (err) => {
-          console.error('PayPal Error:', err);
-          showTransactionMessage('There was an error processing your payment. Please try again or contact support.', true);
-        },
-        onCancel: () => {
-          showTransactionMessage('Payment cancelled. Please try again when you are ready.', true);
+        } catch (error) {
+          console.error('Order creation error:', error);
+          showTransactionMessage('There was an error creating your order. Please try again.', true);
+          throw error;
         }
-      }).render(button)
-        .catch((error) => {
-          console.error('PayPal button render error:', error);
-          button.innerHTML = '<p class="text-red-600">Payment system temporarily unavailable. Please try again later.</p>';
-        });
+      },
+      onApprove: (data, actions) => {
+        showTransactionMessage('Processing your payment...', false);
+        return actions.order.capture()
+          .then((details) => {
+            const businessInfo = JSON.parse(button.dataset.businessInfo);
+            const message = `Transaction completed successfully! Our team will contact ${businessInfo.contactName} at ${businessInfo.companyName} via ${businessInfo.businessEmail} to coordinate delivery.`;
+            showTransactionMessage(message);
+            const form = document.getElementById('businessInfoForm');
+            if (form) {
+              form.reset();
+            }
+          })
+          .catch((error) => {
+            console.error('Payment capture failed:', error);
+            showTransactionMessage('There was an error processing your payment. Please try again or contact support.', true);
+          });
+      },
+      onError: (err) => {
+        console.error('PayPal Error:', err);
+        showTransactionMessage('There was an error processing your payment. Please try again or contact support.', true);
+      },
+      onCancel: () => {
+        showTransactionMessage('Payment cancelled. Please try again when you are ready.', true);
+      }
+    };
+
+    // Render PayPal button
+    paypal.Buttons(buttonConfig)
+      .render(button)
+      .catch((error) => {
+        console.error('PayPal button render error:', error);
+        button.innerHTML = '<p class="text-red-600">Payment system temporarily unavailable. Please try again later.</p>';
+      });
   });
 });
 
