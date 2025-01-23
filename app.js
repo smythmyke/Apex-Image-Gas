@@ -49,18 +49,10 @@ function showTransactionMessage(message, isError = false) {
   setTimeout(() => msgElement.remove(), 5000);
 }
 
-// Initialize PayPal buttons
-window.addEventListener('load', () => {
-  // Remove PayPal buttons from hero section if it exists
-  const heroButtons = document.getElementById('paypal-buttons');
-  if (heroButtons) {
-    heroButtons.remove();
-  }
-
-  // Initialize PayPal buttons
+// Initialize PayPal buttons when ready
+window.addEventListener('paypal-ready', () => {
   document.querySelectorAll('.paypal-button').forEach(button => {
-    if (window.paypal) {
-      paypal.Buttons({
+    paypal.Buttons({
         style: {
           layout: 'vertical',
           shape: 'rect',
@@ -74,50 +66,71 @@ window.addEventListener('load', () => {
           ],
           disallowed: []
         },
-        onClick: function(data, actions) {
+        onClick: (data, actions) => {
           const businessInfo = validateBusinessForm();
           if (!businessInfo) {
             return false;
           }
+          // Store business info for later use
+          button.dataset.businessInfo = JSON.stringify(businessInfo);
           return true;
         },
-        createOrder: function(data, actions) {
-          const businessInfo = validateBusinessForm();
-          if (!businessInfo) {
-            throw new Error('Business information is required');
-          }
-
+        createOrder: (data, actions) => {
           const price = parseFloat(button.dataset.price);
           if (isNaN(price)) {
             throw new Error('Invalid price');
           }
 
           return actions.order.create({
+            intent: 'CAPTURE',
             purchase_units: [{
               description: price === 9999 ? '1L Gas Bottle - Single Purchase' : '1L Gas Bottle - Annual Subscription',
               amount: {
                 currency_code: 'USD',
                 value: price.toFixed(2)
-              }
-            }]
+              },
+              custom_id: button.dataset.businessInfo
+            }],
+            application_context: {
+              shipping_preference: 'GET_FROM_FILE',
+              user_action: 'PAY_NOW'
+            }
           });
         },
-        onApprove: function(data, actions) {
-          return actions.order.capture().then(function(details) {
-            showTransactionMessage('Transaction completed successfully! Our team will contact you shortly to coordinate delivery.');
-            document.getElementById('businessInfoForm').reset();
-          });
+        onApprove: (data, actions) => {
+          return actions.order.capture()
+            .then((details) => {
+              const businessInfo = JSON.parse(button.dataset.businessInfo);
+              const message = `Transaction completed successfully! Our team will contact ${businessInfo.contactName} at ${businessInfo.companyName} via ${businessInfo.businessEmail} to coordinate delivery.`;
+              showTransactionMessage(message);
+              document.getElementById('businessInfoForm').reset();
+            })
+            .catch((error) => {
+              console.error('Payment capture failed:', error);
+              showTransactionMessage('There was an error processing your payment. Please try again or contact support.', true);
+            });
         },
-        onError: function(err) {
+        onError: (err) => {
           console.error('PayPal Error:', err);
-          showTransactionMessage('There was an error processing your payment. Please try again.', true);
+          showTransactionMessage('There was an error processing your payment. Please try again or contact support.', true);
+        },
+        onCancel: () => {
+          showTransactionMessage('Payment cancelled. Please try again when you are ready.', true);
         }
-      }).render(button);
-    } else {
-      console.error('PayPal SDK not loaded');
-      button.innerHTML = '<p class="text-red-600">Payment system temporarily unavailable. Please try again later.</p>';
-    }
+      }).render(button)
+        .catch((error) => {
+          console.error('PayPal button render error:', error);
+          button.innerHTML = '<p class="text-red-600">Payment system temporarily unavailable. Please try again later.</p>';
+        });
   });
+});
+
+// Remove PayPal buttons from hero section if it exists
+window.addEventListener('load', () => {
+  const heroButtons = document.getElementById('paypal-buttons');
+  if (heroButtons) {
+    heroButtons.remove();
+  }
 });
 
 // Add styles for transaction messages
