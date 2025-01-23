@@ -81,6 +81,7 @@ window.addEventListener('paypal-ready', () => {
             throw new Error('Invalid price');
           }
 
+          const businessInfo = JSON.parse(button.dataset.businessInfo);
           return actions.order.create({
             intent: 'CAPTURE',
             purchase_units: [{
@@ -89,10 +90,21 @@ window.addEventListener('paypal-ready', () => {
                 currency_code: 'USD',
                 value: price.toFixed(2)
               },
-              custom_id: button.dataset.businessInfo
+              custom_id: button.dataset.businessInfo,
+              shipping: {
+                name: {
+                  full_name: businessInfo.contactName
+                },
+                email_address: businessInfo.businessEmail,
+                phone: {
+                  phone_number: {
+                    national_number: businessInfo.phoneNumber.replace(/\D/g, '')
+                  }
+                }
+              }
             }],
             application_context: {
-              shipping_preference: 'GET_FROM_FILE',
+              shipping_preference: 'SET_PROVIDED_ADDRESS',
               user_action: 'PAY_NOW'
             }
           });
