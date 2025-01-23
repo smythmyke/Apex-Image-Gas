@@ -340,28 +340,42 @@
   </footer>
 
   <script>
-    // Load PayPal script dynamically
-    const loadPayPalScript = () => {
+    // Initialize PayPal integration
+    window.paypalConfig = {
+      clientId: 'AfkK4GfeMlkjZ_H11vqWTlh7IfbZecUNK6qSrxjx2KG_tbmt2zGEjtDS5QDmsANiYpv9drN0XbBvtIJ6',
+      currency: 'USD'
+    };
+
+    // Load PayPal script
+    (function() {
       const script = document.createElement('script');
-      script.src = 'https://www.paypal.com/sdk/js?client-id=AfkK4GfeMlkjZ_H11vqWTlh7IfbZecUNK6qSrxjx2KG_tbmt2zGEjtDS5QDmsANiYpv9drN0XbBvtIJ6&currency=USD&intent=capture&components=buttons,funding-eligibility&debug=true';
+      script.src = `https://www.paypal.com/sdk/js?client-id=${window.paypalConfig.clientId}&currency=${window.paypalConfig.currency}&intent=capture&components=buttons&debug=true`;
       script.async = true;
-      script.onload = () => {
+      
+      script.addEventListener('load', () => {
         console.log('PayPal script loaded successfully');
-        // Initialize buttons after script loads
         if (window.paypal) {
-          window.dispatchEvent(new Event('paypal-ready'));
+          // Ensure DOM is ready
+          if (document.readyState === 'complete') {
+            window.dispatchEvent(new Event('paypal-ready'));
+          } else {
+            window.addEventListener('load', () => {
+              window.dispatchEvent(new Event('paypal-ready'));
+            });
+          }
         }
-      };
-      script.onerror = (error) => {
+      });
+
+      script.addEventListener('error', (error) => {
         console.error('Error loading PayPal script:', error);
         document.querySelectorAll('.paypal-button').forEach(button => {
           button.innerHTML = '<p class="text-red-600">Payment system temporarily unavailable. Please try again later.</p>';
         });
-      };
-      document.body.appendChild(script);
-    };
-    window.addEventListener('load', loadPayPalScript);
+      });
+
+      document.head.appendChild(script);
+    })();
   </script>
-  <script src="app.js" defer></script>
+  <script src="app.js"></script>
 </body>
 </html>
