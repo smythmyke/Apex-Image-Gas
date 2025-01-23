@@ -349,7 +349,7 @@
     // Load PayPal script
     (function() {
       const script = document.createElement('script');
-      script.src = `https://www.paypal.com/sdk/js?client-id=${window.paypalConfig.clientId}&currency=${window.paypalConfig.currency}&intent=capture&components=buttons,subscription&debug=true`;
+      script.src = `https://www.paypal.com/sdk/js?client-id=${window.paypalConfig.clientId}&currency=${window.paypalConfig.currency}&intent=capture&components=buttons,subscription&vault=true&debug=true`;
       script.async = true;
       
       script.addEventListener('load', () => {

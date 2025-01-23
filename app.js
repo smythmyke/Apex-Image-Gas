@@ -101,12 +101,45 @@ window.addEventListener('paypal-ready', () => {
           // Handle subscription vs one-time purchase
           if (button.id === 'paypal-subscription') {
             return actions.subscription.create({
-              plan_id: 'P-YEARLY_PLAN',  // We'll create this dynamically
+              plan: {
+                billing_cycles: [{
+                  frequency: {
+                    interval_unit: 'YEAR',
+                    interval_count: 1
+                  },
+                  tenure_type: 'REGULAR',
+                  sequence: 1,
+                  total_cycles: 0,
+                  pricing_scheme: {
+                    fixed_price: {
+                      currency_code: 'USD',
+                      value: price.toFixed(2)
+                    }
+                  }
+                }],
+                payment_preferences: {
+                  auto_bill_outstanding: true,
+                  setup_fee: {
+                    currency_code: 'USD',
+                    value: '0'
+                  },
+                  setup_fee_failure_action: 'CANCEL',
+                  payment_failure_threshold: 3
+                },
+                taxes: {
+                  percentage: '0',
+                  inclusive: false
+                }
+              },
               custom_id: button.dataset.businessInfo,
               application_context: {
                 shipping_preference: 'SET_PROVIDED_ADDRESS',
                 user_action: 'SUBSCRIBE_NOW',
-                brand_name: 'Apex Image Gas'
+                brand_name: 'Apex Image Gas',
+                payment_method: {
+                  payer_selected: 'PAYPAL',
+                  payee_preferred: 'IMMEDIATE_PAYMENT_REQUIRED'
+                }
               },
               subscriber: {
                 name: {
