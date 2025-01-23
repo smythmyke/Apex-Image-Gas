@@ -65,18 +65,14 @@ function showTransactionMessage(message, isError = false) {
 window.addEventListener('paypal-ready', () => {
   document.querySelectorAll('.paypal-button').forEach(button => {
     const buttonConfig = {
+      fundingSource: paypal.FUNDING.PAYPAL,
       style: {
         layout: 'vertical',
         shape: 'rect',
-        color: 'gold'
+        color: 'gold',
+        label: 'pay'
       },
-      funding: {
-        allowed: [
-          paypal.FUNDING.PAYPAL,
-          paypal.FUNDING.CARD
-        ],
-        disallowed: []
-      },
+      env: 'sandbox',
       onClick: (data, actions) => {
         const businessInfo = validateBusinessForm();
         if (!businessInfo) {
