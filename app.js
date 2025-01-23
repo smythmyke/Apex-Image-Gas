@@ -98,10 +98,35 @@ window.addEventListener('paypal-ready', () => {
           }
 
           const businessInfo = JSON.parse(button.dataset.businessInfo);
+          // Handle subscription vs one-time purchase
+          if (button.id === 'paypal-subscription') {
+            return actions.subscription.create({
+              plan_id: 'P-YEARLY_PLAN',  // We'll create this dynamically
+              custom_id: button.dataset.businessInfo,
+              application_context: {
+                shipping_preference: 'SET_PROVIDED_ADDRESS',
+                user_action: 'SUBSCRIBE_NOW',
+                brand_name: 'Apex Image Gas'
+              },
+              subscriber: {
+                name: {
+                  given_name: businessInfo.contactName
+                },
+                email_address: businessInfo.businessEmail,
+                shipping_address: {
+                  name: {
+                    full_name: businessInfo.contactName
+                  }
+                }
+              }
+            });
+          }
+
+          // Single purchase
           return actions.order.create({
             intent: 'CAPTURE',
             purchase_units: [{
-              description: price === 9999 ? '1L Gas Bottle - Single Purchase' : '1L Gas Bottle - Annual Subscription',
+              description: '1L Gas Bottle - Single Purchase',
               amount: {
                 currency_code: 'USD',
                 value: price.toFixed(2)
@@ -135,6 +160,26 @@ window.addEventListener('paypal-ready', () => {
       },
       onApprove: (data, actions) => {
         showTransactionMessage('Processing your payment...', false);
+        
+        // Handle subscription approval
+        if (button.id === 'paypal-subscription') {
+          return actions.subscription.get()
+            .then((details) => {
+              const businessInfo = JSON.parse(button.dataset.businessInfo);
+              const message = `Annual subscription activated successfully! Our team will contact ${businessInfo.contactName} at ${businessInfo.companyName} via ${businessInfo.businessEmail} to coordinate your first delivery.`;
+              showTransactionMessage(message);
+              const form = document.getElementById('businessInfoForm');
+              if (form) {
+                form.reset();
+              }
+            })
+            .catch((error) => {
+              console.error('Subscription activation failed:', error);
+              showTransactionMessage('There was an error activating your subscription. Please try again or contact support.', true);
+            });
+        }
+        
+        // Handle one-time purchase approval
         return actions.order.capture()
           .then((details) => {
             const businessInfo = JSON.parse(button.dataset.businessInfo);
