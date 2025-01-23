@@ -346,15 +346,23 @@
       currency: 'USD'
     };
 
-    // Load PayPal script
+    // Load PayPal scripts
     (function() {
-      const script = document.createElement('script');
-      script.src = `https://www.paypal.com/sdk/js?client-id=${window.paypalConfig.clientId}&currency=${window.paypalConfig.currency}&intent=capture&components=buttons,subscription&vault=true&debug=true`;
-      script.async = true;
+      // Load PayPal SDK for one-time purchases
+      const purchaseScript = document.createElement('script');
+      purchaseScript.src = `https://www.paypal.com/sdk/js?client-id=${window.paypalConfig.clientId}&currency=${window.paypalConfig.currency}&intent=capture&components=buttons&debug=true`;
+      purchaseScript.async = true;
       
-      script.addEventListener('load', () => {
+      // Load PayPal SDK for subscriptions
+      const subscriptionScript = document.createElement('script');
+      subscriptionScript.src = `https://www.paypal.com/sdk/js?client-id=${window.paypalConfig.clientId}&currency=${window.paypalConfig.currency}&intent=subscription&components=buttons&vault=true&debug=true`;
+      subscriptionScript.async = true;
+      
+      let scriptsLoaded = 0;
+      const onScriptLoad = () => {
+        scriptsLoaded++;
         console.log('PayPal script loaded successfully');
-        if (window.paypal) {
+        if (scriptsLoaded === 2 && window.paypal) {
           // Ensure DOM is ready
           if (document.readyState === 'complete') {
             window.dispatchEvent(new Event('paypal-ready'));
@@ -364,16 +372,22 @@
             });
           }
         }
-      });
+      };
 
-      script.addEventListener('error', (error) => {
+      const onScriptError = (error) => {
         console.error('Error loading PayPal script:', error);
         document.querySelectorAll('.paypal-button').forEach(button => {
           button.innerHTML = '<p class="text-red-600">Payment system temporarily unavailable. Please try again later.</p>';
         });
-      });
+      };
 
-      document.head.appendChild(script);
+      purchaseScript.addEventListener('load', onScriptLoad);
+      purchaseScript.addEventListener('error', onScriptError);
+      subscriptionScript.addEventListener('load', onScriptLoad);
+      subscriptionScript.addEventListener('error', onScriptError);
+
+      document.head.appendChild(purchaseScript);
+      document.head.appendChild(subscriptionScript);
     })();
   </script>
   <script src="app.js"></script>
