@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tailwindcss -i ./src/input.css -o ./dist/output.css"
+    "build": "npx tailwindcss -i ./src/input.css -o ./output.css"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,9 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17"
+  },
+  "dependencies": {
+    "@firebase/analytics": "^0.10.11",
+    "firebase": "^11.3.0"
   }
 }

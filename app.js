@@ -1,3 +1,147 @@
+// Initialize Firebase
+import { initializeApp } from "firebase/app";
+import { getAnalytics, logEvent } from "firebase/analytics";
+import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { getFunctions, httpsCallable } from "firebase/functions";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDPx2x-YfwSpc4ZvCe6nJmKASzxMAlgmXY",
+  authDomain: "apex-gas-9920e.firebaseapp.com",
+  projectId: "apex-gas-9920e",
+  storageBucket: "apex-gas-9920e.firebasestorage.app",
+  messagingSenderId: "177024004601",
+  appId: "1:177024004601:web:85819c56ce7c3a77334d28",
+  measurementId: "G-PZMWFDYJ0L"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+const functions = getFunctions(app);
+const sendEmailNotification = httpsCallable(functions, 'sendEmailNotification');
+
+// Function to track form submissions
+async function trackFormSubmission(formData) {
+  try {
+    const docRef = await addDoc(collection(db, "form_submissions"), {
+      ...formData,
+      timestamp: serverTimestamp()
+    });
+    console.log("Form submission tracked with ID: ", docRef.id);
+    
+    // Send email notification for form submission
+    await sendEmailNotification({
+      type: 'form_submission',
+      data: {
+        ...formData,
+        submissionId: docRef.id
+      }
+    });
+  } catch (error) {
+    console.error("Error tracking form submission: ", error);
+  }
+}
+
+// Function to track purchases
+async function trackPurchase(purchaseData) {
+  try {
+    const docRef = await addDoc(collection(db, "purchases"), {
+      ...purchaseData,
+      timestamp: serverTimestamp()
+    });
+    console.log("Purchase tracked with ID: ", docRef.id);
+    
+    // Send email notification for purchase
+    await sendEmailNotification({
+      type: 'purchase',
+      data: {
+        ...purchaseData,
+        purchaseId: docRef.id
+      }
+    });
+  } catch (error) {
+    console.error("Error tracking purchase: ", error);
+  }
+}
+
+// Analytics tracking functions
+function trackPageView() {
+  const pagePath = window.location.pathname;
+  const pageTitle = document.title;
+  logEvent(analytics, 'page_view', {
+    page_path: pagePath,
+    page_title: pageTitle
+  });
+}
+
+function trackSectionView(sectionId) {
+  logEvent(analytics, 'section_view', {
+    section_id: sectionId
+  });
+}
+
+function trackScroll() {
+  const scrollDepth = Math.round((window.scrollY + window.innerHeight) / 
+    document.documentElement.scrollHeight * 100);
+  logEvent(analytics, 'scroll_depth', {
+    depth: scrollDepth
+  });
+}
+
+// Handle specialty gas form submission
+document.getElementById('specialtyGasForm')?.addEventListener('submit', async (e) => {
+  // Google Ads conversion is handled by the form's onsubmit attribute
+  
+  // Track in Firebase Analytics
+  const formData = {
+    companyName: e.target.companyName.value,
+    contactName: e.target.contactName.value,
+    phoneNumber: e.target.phoneNumber.value,
+    businessEmail: e.target.businessEmail.value,
+    facilityType: e.target.facilityType.value,
+    gas: e.target.gas.value,
+    hasEosXRay: e.target.eosXRayMachine.checked,
+    message: e.target.message.value
+  };
+
+  logEvent(analytics, 'specialty_gas_inquiry', formData);
+  await trackFormSubmission(formData);
+});
+
+// Track page views on load and when navigation occurs
+window.addEventListener('load', () => {
+  trackPageView();
+  
+  // Set up section view tracking
+  document.querySelectorAll('section').forEach(section => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            trackSectionView(section.id);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(section);
+  });
+});
+
+window.addEventListener('popstate', trackPageView);
+
+// Track scroll depth
+let lastScrollDepth = 0;
+window.addEventListener('scroll', () => {
+  const currentDepth = Math.round((window.scrollY + window.innerHeight) / 
+    document.documentElement.scrollHeight * 100);
+  if (currentDepth % 25 === 0 && currentDepth > lastScrollDepth) {
+    trackScroll();
+    lastScrollDepth = currentDepth;
+  }
+});
+
 // Validate business information form
 function validateBusinessForm() {
   try {
@@ -31,12 +175,17 @@ function validateBusinessForm() {
       return false;
     }
 
-    return {
+    const formData = {
       companyName,
       contactName,
       phoneNumber,
       businessEmail
     };
+    
+    // Track form submission
+    trackFormSubmission(formData);
+    
+    return formData;
   } catch (error) {
     console.error('Form validation error:', error);
     showTransactionMessage('Please fill out the business information form before proceeding.', true);
@@ -58,7 +207,7 @@ function showTransactionMessage(message, isError = false) {
   const pricing = document.querySelector('#pricing');
   pricing.insertBefore(msgElement, pricing.firstChild);
 
-  setTimeout(() => msgElement.remove(), 5000);
+  setTimeout(() => msgElement.remove(), 15000); // Show message for 15 seconds
 }
 
 // Initialize PayPal buttons when ready
@@ -163,6 +312,19 @@ window.addEventListener('paypal-ready', () => {
             .then((details) => {
               const message = `Annual subscription activated successfully! Our team will contact you at ${details.subscriber.email_address} to coordinate your first delivery.`;
               showTransactionMessage(message);
+              
+              // Track the subscription purchase
+              const subscriptionData = {
+                type: 'subscription',
+                email: details.subscriber.email_address,
+                subscriptionId: details.id,
+                status: details.status,
+                planId: details.plan_id,
+                startTime: details.start_time,
+                businessInfo: validateBusinessForm()
+              };
+              trackPurchase(subscriptionData);
+              
               const form = document.getElementById('businessInfoForm');
               if (form) {
                 form.reset();
@@ -179,6 +341,19 @@ window.addEventListener('paypal-ready', () => {
           .then((details) => {
               const message = `Transaction completed successfully! Our team will contact you at ${details.payer.email_address} to coordinate delivery.`;
             showTransactionMessage(message);
+            
+            // Track the one-time purchase
+            const purchaseData = {
+              type: 'one_time',
+              email: details.payer.email_address,
+              amount: details.purchase_units[0].amount.value,
+              currency: details.purchase_units[0].amount.currency_code,
+              orderId: details.id,
+              status: details.status,
+              businessInfo: validateBusinessForm()
+            };
+            trackPurchase(purchaseData);
+            
             const form = document.getElementById('businessInfoForm');
             if (form) {
               form.reset();
@@ -303,27 +478,6 @@ modalStyle.textContent = `
   
   .modal-content {
     position: relative;
-    max-width: 90%;
-    max-height: 90vh;
-  }
-  
-  .modal-content img {
-    max-width: 100%;
-    max-height: 90vh;
-    object-fit: contain;
-    border-radius: 8px;
-  }
-  
-  .close-modal {
-    position: absolute;
-    top: -40px;
-    right: -40px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 36px;
-    cursor: pointer;
-    padding: 10px;
   }
   
   @keyframes fadeIn {
