@@ -3,6 +3,7 @@
 const AutomatedBlogWriter = require('./automated-blog-writer');
 const admin = require('firebase-admin');
 const axios = require('axios');
+const { convertMarkdownToHTML } = require('./lib/markdown-converter');
 
 // Initialize if needed
 if (!admin.apps.length) {
@@ -43,12 +44,15 @@ async function generateNewBlog() {
     console.log(`Title: ${blogContent.title}`);
     console.log(`Word count: ${blogContent.wordCount}`);
 
+    // Convert markdown to HTML
+    const htmlContent = convertMarkdownToHTML(blogContent.content);
+
     // Create blog document
     const blogDoc = {
       title: blogContent.title,
       slug: blogContent.seoMeta.slug,
       excerpt: blogContent.excerpt,
-      content: blogContent.content,
+      content: htmlContent,
       markdownContent: blogContent.content,
       category: category,
       tags: blogContent.seoMeta.keywords.slice(0, 5),
