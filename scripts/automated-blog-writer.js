@@ -2,6 +2,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const admin = require('firebase-admin');
 const blogConfig = require('./blog-automation-config');
 const path = require('path');
+const { convertMarkdownToHTML } = require('./lib/markdown-converter');
 
 // Initialize Firebase Admin
 if (!admin.apps.length) {

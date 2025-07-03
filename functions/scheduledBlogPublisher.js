@@ -281,9 +281,9 @@ async function generateBlogContent(apiKey, topic, category) {
   const result = await model.generateContent(prompt);
   const response = await result.response;
   let content = response.text();
-  
+
   // Remove markdown code block wrappers if present
-  content = content.replace(/^```markdown\n?/, '').replace(/\n?```$/, '');
+  content = content.replace(/^```markdown\n?/, "").replace(/\n?```$/, "");
 
   // Generate SEO metadata
   const seoPrompt = `Based on this blog topic: "${topic}"

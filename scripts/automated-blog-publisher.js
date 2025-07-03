@@ -6,6 +6,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const blogConfig = require('./blog-automation-config');
 const imageTracker = require('./pexels-image-tracker');
+const { convertMarkdownToHTML } = require('./lib/markdown-converter');
 
 // Initialize Firebase Admin if not already initialized
 if (!admin.apps.length) {
@@ -109,7 +110,7 @@ class AutomatedBlogPublisher {
       
       // Step 3: Convert markdown to HTML
       console.log('\n3️⃣ Converting content to HTML...');
-      const htmlContent = this.convertMarkdownToHTML(blogContent.content);
+      const htmlContent = convertMarkdownToHTML(blogContent.content);
       
       // Step 4: Create blog post object
       console.log('\n4️⃣ Creating blog post object...');
@@ -547,43 +548,6 @@ Generate SEO metadata in JSON format for a medical equipment company:
     };
   }
 
-  /**
-   * Convert markdown to HTML
-   */
-  convertMarkdownToHTML(markdown) {
-    // Remove markdown code blocks
-    let html = markdown.replace(/```markdown\n?|\n?```/g, '');
-    
-    // Convert headers
-    html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-    html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-    html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
-    
-    // Convert bold and italic
-    html = html.replace(/\*\*\*(.*)\*\*\*/g, '<strong><em>$1</em></strong>');
-    html = html.replace(/\*\*(.*)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/\*(.*)\*/g, '<em>$1</em>');
-    
-    // Convert links
-    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-    
-    // Convert lists
-    html = html.replace(/^\* (.+)$/gim, '<li>$1</li>');
-    html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-    
-    // Convert paragraphs
-    html = html.split('\n\n').map(para => {
-      if (!para.startsWith('<') && para.trim()) {
-        return `<p>${para.trim()}</p>`;
-      }
-      return para;
-    }).join('\n\n');
-    
-    // Clean up
-    html = html.replace(/\n{3,}/g, '\n\n');
-    
-    return html;
-  }
 
   /**
    * Create blog post object
