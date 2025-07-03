@@ -1,0 +1,26 @@
+{
+  "name": "apex-gas-blog-scripts",
+  "version": "1.0.0",
+  "description": "Blog generation scripts for Apex Gas medical equipment content",
+  "main": "automated-blog-writer.js",
+  "scripts": {
+    "test": "node test-blog-generation.js",
+    "generate-blog": "node automated-blog-writer.js",
+    "publish-blog": "node automated-blog-publisher.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "axios": "^1.6.2",
+    "firebase-admin": "^12.0.0",
+    "sharp": "^0.33.5"
+  },
+  "keywords": [
+    "blog",
+    "automation",
+    "medical equipment",
+    "healthcare",
+    "apex gas"
+  ],
+  "author": "Apex Gas Development Team",
+  "license": "ISC"
+}

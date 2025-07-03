@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read access to blog posts for everyone
+    match /blogPosts/{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Allow read access to API keys only from authenticated admin SDK
+    match /apiKeys/{document=**} {
+      allow read: if false;
+      allow write: if false;
+    }
+    
+    // Allow read/write access to other collections for authenticated users
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

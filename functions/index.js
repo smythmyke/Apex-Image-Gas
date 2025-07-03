@@ -179,3 +179,8 @@ exports.onPurchaseTracked = onDocumentCreated({
   }
 },
 );
+
+// Export scheduled blog publisher functions
+const {scheduledBlogPublisher, generateBlogManually} = require("./scheduledBlogPublisher");
+exports.scheduledBlogPublisher = scheduledBlogPublisher;
+exports.generateBlogManually = generateBlogManually;

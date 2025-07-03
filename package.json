@@ -25,6 +25,10 @@
   },
   "dependencies": {
     "@firebase/analytics": "^0.10.11",
-    "firebase": "^11.3.0"
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.10.0",
+    "firebase": "^11.3.0",
+    "firebase-admin": "^13.4.0",
+    "marked": "^16.0.0"
   }
 }
