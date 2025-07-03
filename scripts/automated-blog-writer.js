@@ -114,7 +114,12 @@ class AutomatedBlogWriter {
     
     const result = await this.model.generateContent(prompt);
     const response = await result.response;
-    return response.text();
+    let content = response.text();
+    
+    // Remove markdown code block wrappers if present
+    content = content.replace(/^```markdown\n?/, '').replace(/\n?```$/, '');
+    
+    return content;
   }
 
   /**
