@@ -68,7 +68,7 @@ When it comes to medical gas systems, reliability and safety are non-negotiable.
 
 Don't compromise on patient safety. Trust the experts who understand the critical nature of medical gas systems.
 
-**[Request a Free Consultation](https://apexgas.com/contact) - Our experts are ready to help**
+**[Request a Free Consultation](https://apeximagegas.net/contact) - Our experts are ready to help**
     `,
     
     xrayEquipmentRelated: `
@@ -85,7 +85,7 @@ Modern healthcare demands cutting-edge imaging technology. Apex Gas delivers sta
 
 Experience the difference quality imaging equipment can make in patient care.
 
-**[Explore Our X-Ray Solutions](https://apexgas.com/xray-equipment) - Schedule a Demo Today**
+**[Explore Our X-Ray Solutions](https://apeximagegas.net/xray-equipment) - Schedule a Demo Today**
     `,
     
     maintenanceRelated: `
@@ -102,7 +102,7 @@ Preventive maintenance is crucial for medical equipment reliability. Apex Gas's 
 
 Protect your investment and ensure uninterrupted patient care.
 
-**[Learn About Our Service Plans](https://apexgas.com/services) - Keep Your Equipment Running**
+**[Learn About Our Service Plans](https://apeximagegas.net/services) - Keep Your Equipment Running**
     `,
     
     generalPurpose: `
@@ -119,7 +119,7 @@ Whether you're upgrading existing equipment or planning new installations, Apex 
 
 Join the network of healthcare facilities that rely on Apex Gas for their critical equipment needs.
 
-**[Get Your Free Quote Today](https://apexgas.com/quote) - No obligation consultation**
+**[Get Your Free Quote Today](https://apeximagegas.net/quote) - No obligation consultation**
     `
   },
 

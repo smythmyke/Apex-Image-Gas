@@ -86,8 +86,12 @@ exports.scheduledBlogPublisher = onSchedule({
     const blogContent = await generateBlogContent( // eslint-disable-line max-len
         geminiApiKey, topic, category);
 
-    // Select image from Pexels
-    const imageData = await selectPexelsImage(pexelsApiKey, topic);
+    // Generate a unique ID for the blog post
+    const blogRef = db.collection("blogPosts").doc();
+    const blogId = blogRef.id;
+
+    // Select image from Pexels with blogId for tracking
+    const imageData = await selectPexelsImage(pexelsApiKey, topic, blogId);
 
     // Create blog document
     const blogDoc = {
@@ -121,25 +125,25 @@ exports.scheduledBlogPublisher = onSchedule({
       },
     };
 
-    // Save to Firestore
-    const docRef = await db.collection("blogPosts").add(blogDoc);
-    logger.info(`Blog saved with ID: ${docRef.id}`);
+    // Save to Firestore with pre-generated ID
+    await blogRef.set(blogDoc);
+    logger.info(`Blog saved with ID: ${blogId}`);
 
     // Post to social media
-    await postToSocialMedia(apiKeys, blogDoc, docRef.id);
+    await postToSocialMedia(apiKeys, blogDoc, blogId);
 
     // Log success
     await db.collection("blogAutomationLogs").add({
       type: "scheduled_publication",
       success: true,
-      blogId: docRef.id,
+      blogId: blogId,
       topic: topic,
       category: category,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
     });
 
     logger.info("Blog publication completed successfully");
-    return {success: true, blogId: docRef.id};
+    return {success: true, blogId: blogId};
   } catch (error) {
     logger.error("Blog publication failed:", error);
 
@@ -189,7 +193,11 @@ exports.generateBlogManually = onRequest({
         category,
     );
 
-    const imageData = await selectPexelsImage(apiKeys.PEXELS_API_KEY, topic);
+    // Generate a unique ID for the blog post
+    const blogRef = db.collection("blogPosts").doc();
+    const blogId = blogRef.id;
+
+    const imageData = await selectPexelsImage(apiKeys.PEXELS_API_KEY, topic, blogId);
 
     const blogDoc = {
       title: blogContent.title,
@@ -221,11 +229,11 @@ exports.generateBlogManually = onRequest({
       },
     };
 
-    const docRef = await db.collection("blogPosts").add(blogDoc);
+    await blogRef.set(blogDoc);
 
     res.json({
       success: true,
-      blogId: docRef.id,
+      blogId: blogId,
       title: blogContent.title,
       status: "draft",
     });
@@ -309,62 +317,117 @@ Generate SEO metadata in JSON format:
 }
 
 /**
- * Select an image from Pexels API
+ * Select an image from Pexels API with duplicate prevention
  * @param {string} apiKey - The Pexels API key
  * @param {string} topic - The blog topic
+ * @param {string} blogId - The blog ID for tracking
  * @return {Promise<Object>} The selected image data
  */
-async function selectPexelsImage(apiKey, topic) {
-  const searchQuery = "medical x-ray equipment technology";
+async function selectPexelsImage(apiKey, topic, blogId) {
+  // Generate dynamic search queries based on topic
+  const topicWords = topic.toLowerCase()
+      .split(" ")
+      .filter((word) => word.length > 3 && !["with", "from", "that", "this", "your", "best"].includes(word));
 
-  try {
-    const response = await axios.get("https://api.pexels.com/v1/search", {
-      headers: {
-        Authorization: apiKey,
-      },
-      params: {
-        query: searchQuery,
-        per_page: 10,
-        orientation: "landscape",
-      },
-    });
+  const searchQueries = [
+    // Primary: topic-based searches
+    topicWords.slice(0, 3).join(" ") + " medical equipment",
+    topicWords.slice(0, 2).join(" ") + " healthcare",
+    topic.toLowerCase().includes("x-ray") ? "x-ray imaging equipment" : "medical imaging technology",
 
-    if (response.data.photos.length > 0) {
-      // Check for unused images
-      const usedImages = await db.collection("usedPexelsImages").get();
-      const usedIds = usedImages.docs.map((doc) => doc.id);
+    // Secondary: category-specific searches
+    "medical gas equipment technology",
+    "hospital radiology equipment",
+    "healthcare diagnostic tools",
+    "medical imaging systems",
 
-      const unusedPhoto = response.data.photos.find(
-          (photo) => !usedIds.includes(photo.id.toString()),
-      );
+    // Tertiary: generic medical searches
+    "modern medical equipment",
+    "healthcare technology solutions",
+    "hospital equipment professional",
+    "medical facility technology",
+  ];
 
-      const selectedPhoto = unusedPhoto || response.data.photos[0];
+  // Get all used image IDs upfront for efficiency
+  const usedImages = await db.collection("usedPexelsImages").get();
+  const usedIds = new Set(usedImages.docs.map((doc) => doc.id));
 
-      // Mark as used
-      await db.collection("usedPexelsImages")
-          .doc(selectedPhoto.id.toString())
-          .set({
-            pexelsId: selectedPhoto.id,
-            photographer: selectedPhoto.photographer,
-            pexelsUrl: selectedPhoto.url,
-            imageUrl: selectedPhoto.src.large2x,
-            usedAt: admin.firestore.FieldValue.serverTimestamp(),
-          });
+  // Try each search query until we find an unused image
+  for (const searchQuery of searchQueries) {
+    try {
+      const response = await axios.get("https://api.pexels.com/v1/search", {
+        headers: {
+          Authorization: apiKey,
+        },
+        params: {
+          query: searchQuery,
+          per_page: 30, // Increased from 10 to find more options
+          orientation: "landscape",
+        },
+      });
 
-      return {
-        url: selectedPhoto.src.large2x,
-        alt: `${topic} - Medical imaging equipment`,
-        credit: `Photo by ${selectedPhoto.photographer} from Pexels`,
-      };
+      if (response.data.photos.length > 0) {
+        // Find the first unused photo
+        const unusedPhoto = response.data.photos.find(
+            (photo) => !usedIds.has(photo.id.toString()),
+        );
+
+        if (unusedPhoto) {
+          // Mark as used with blog reference
+          try {
+            await db.collection("usedPexelsImages")
+                .doc(unusedPhoto.id.toString())
+                .set({
+                  pexelsId: unusedPhoto.id,
+                  photographer: unusedPhoto.photographer,
+                  pexelsUrl: unusedPhoto.url,
+                  imageUrl: unusedPhoto.src.large2x || unusedPhoto.src.large,
+                  usedAt: admin.firestore.FieldValue.serverTimestamp(),
+                  usedInBlog: blogId,
+                  searchQuery: searchQuery,
+                });
+
+            logger.info(`Selected unused image ${unusedPhoto.id} with query: ${searchQuery}`);
+          } catch (trackingError) {
+            logger.error("Failed to track image usage:", trackingError);
+            // Continue anyway - better to have the image than fail
+          }
+
+          return {
+            url: unusedPhoto.src.large2x || unusedPhoto.src.large,
+            alt: `${topic} - Medical imaging equipment`,
+            credit: `Photo by ${unusedPhoto.photographer} from Pexels`,
+            pexelsId: unusedPhoto.id,
+          };
+        }
+      }
+    } catch (error) {
+      logger.error(`Pexels search failed for query "${searchQuery}":`, error);
+      // Continue to next query
     }
-  } catch (error) {
-    logger.error("Pexels image selection failed:", error);
   }
 
-  // Fallback image
+  // Fallback: use a random default image
+  const defaultImages = [
+    {
+      url: "https://images.pexels.com/photos/4226140/pexels-photo-4226140.jpeg",
+      alt: "Medical diagnostic equipment",
+    },
+    {
+      url: "https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg",
+      alt: "Medical X-ray equipment",
+    },
+    {
+      url: "https://images.pexels.com/photos/3938022/pexels-photo-3938022.jpeg",
+      alt: "Healthcare technology",
+    },
+  ];
+
+  const fallbackImage = defaultImages[Math.floor(Math.random() * defaultImages.length)];
+  logger.warn("Using fallback image - all searches exhausted");
+
   return {
-    url: "https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg",
-    alt: "Medical X-ray equipment",
+    ...fallbackImage,
     credit: "Photo by Pexels",
   };
 }

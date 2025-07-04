@@ -129,7 +129,7 @@ class AutomatedBlogPublisher {
       console.log(`\n✅ Blog post ${isDraft ? 'drafted' : 'published'} successfully!`);
       console.log(`📍 Document ID: ${docId}`);
       console.log(`🔗 Slug: ${blogPost.slug}`);
-      console.log(`🌐 URL: https://apexgas.com/blog/${blogPost.slug}\n`);
+      console.log(`🌐 URL: https://blog.apeximagegas.net/${blogPost.slug}\n`);
       
       return { success: true, docId, blogPost };
       

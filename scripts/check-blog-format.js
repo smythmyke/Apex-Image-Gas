@@ -9,11 +9,19 @@ const db = admin.firestore();
 
 async function checkBlogFormat() {
   try {
-    // Get the latest blog post
-    const snapshot = await db.collection('blogPosts')
-      .orderBy('createdAt', 'desc')
-      .limit(1)
-      .get();
+    // Get specific blog post if ID provided, otherwise get latest
+    const blogId = process.argv[2];
+    let snapshot;
+    
+    if (blogId) {
+      const doc = await db.collection('blogPosts').doc(blogId).get();
+      snapshot = { empty: !doc.exists, docs: doc.exists ? [doc] : [] };
+    } else {
+      snapshot = await db.collection('blogPosts')
+        .orderBy('createdAt', 'desc')
+        .limit(1)
+        .get();
+    }
     
     if (snapshot.empty) {
       console.log('No blog posts found');
