@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful - Apex Image Gas</title>
+  <link rel="icon" type="image/x-icon" href="images/apex_logo.png">
+  <link href="output.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="bg-blue-600 text-white py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <div class="flex items-center space-x-4">
+        <img src="images/apex_logo.png" alt="Apex Image Gas Logo" class="h-10 logo-shine">
+        <h1 class="text-2xl font-bold"><span style="font-family: 'Orbitron', sans-serif;">APEX</span> Image Gas</h1>
+      </div>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a href="index.html" class="hover:text-blue-200">Home</a></li>
+          <li><a href="index.html#product" class="hover:text-blue-200">Product</a></li>
+          <li><a href="index.html#pricing" class="hover:text-blue-200">Pricing</a></li>
+          <li><a href="index.html#contact" class="hover:text-blue-200">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="min-h-screen bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
+      <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8 text-center">
+        <div class="mb-6">
+          <svg class="w-24 h-24 mx-auto text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">Payment Successful!</h2>
+        
+        <p class="text-lg text-gray-600 mb-6">
+          Thank you for your purchase. Your order has been successfully processed.
+        </p>
+        
+        <div class="bg-blue-50 rounded-lg p-6 mb-6 text-left">
+          <h3 class="font-semibold text-gray-800 mb-3">What happens next?</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span>You will receive an order confirmation email shortly</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Our team will contact you within 24 hours to coordinate delivery</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Your gas mixture will be prepared and shipped according to your requirements</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="border-t pt-6">
+          <p class="text-gray-600 mb-4">
+            Order ID: <span id="orderId" class="font-mono text-gray-800"></span>
+          </p>
+          <a href="index.html" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+            Return to Home
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="text-center">
+        <p>&copy; 2024 Apex Image Gas. All rights reserved.</p>
+        <p class="mt-2">
+          <a href="privacy.html" class="hover:text-blue-300">Privacy Policy</a> |
+          <a href="terms.html" class="hover:text-blue-300">Terms of Service</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Display order ID from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+    
+    console.log('URL params:', window.location.search);
+    console.log('Session ID:', sessionId);
+    
+    if (sessionId) {
+      document.getElementById('orderId').textContent = sessionId;
+    } else {
+      // Generate a reference number if no session ID
+      const timestamp = Date.now();
+      const reference = 'APX-' + timestamp.toString().slice(-8);
+      document.getElementById('orderId').textContent = reference;
+      console.log('No session ID found, generated reference:', reference);
+    }
+  </script>
+  
+  <!-- Firebase SDK -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

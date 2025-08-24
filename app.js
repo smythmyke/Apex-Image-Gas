@@ -3,6 +3,8 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics, logEvent } from "firebase/analytics";
 import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { loadStripe } from '@stripe/stripe-js';
+import { STRIPE_CONFIG } from './src/stripe-config.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDPx2x-YfwSpc4ZvCe6nJmKASzxMAlgmXY",
@@ -20,6 +22,18 @@ const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const functions = getFunctions(app);
 const sendEmailNotification = httpsCallable(functions, 'sendEmailNotification');
+
+// Initialize Stripe
+let stripe;
+loadStripe(STRIPE_CONFIG.PUBLISHABLE_KEY).then(stripeInstance => {
+  stripe = stripeInstance;
+  initializeStripeButtons();
+}).catch(error => {
+  console.error('Failed to load Stripe:', error);
+  document.querySelectorAll('.stripe-button').forEach(button => {
+    button.innerHTML = '<p class="text-red-600">Payment system temporarily unavailable. Please try again later.</p>';
+  });
+});
 
 // Function to track form submissions
 async function trackFormSubmission(formData) {
@@ -98,73 +112,69 @@ document.getElementById('specialtyGasForm')?.addEventListener('submit', async (e
     companyName: e.target.companyName.value,
     contactName: e.target.contactName.value,
     phoneNumber: e.target.phoneNumber.value,
-    businessEmail: e.target.businessEmail.value,
-    facilityType: e.target.facilityType.value,
-    gas: e.target.gas.value,
-    hasEosXRay: e.target.eosXRayMachine.checked,
-    message: e.target.message.value
+    businessEmail: e.target.businessEmail.value
   };
-
-  logEvent(analytics, 'specialty_gas_inquiry', formData);
-  await trackFormSubmission(formData);
-});
-
-// Track page views on load and when navigation occurs
-window.addEventListener('load', () => {
-  trackPageView();
   
-  // Set up section view tracking
-  document.querySelectorAll('section').forEach(section => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            trackSectionView(section.id);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(section);
+  await trackFormSubmission(formData);
+  logEvent(analytics, 'form_submit', {
+    form_name: 'specialty_gas_inquiry'
   });
 });
 
-window.addEventListener('popstate', trackPageView);
-
 // Track scroll depth
-let lastScrollDepth = 0;
+let maxScroll = 0;
 window.addEventListener('scroll', () => {
-  const currentDepth = Math.round((window.scrollY + window.innerHeight) / 
+  const scrollPercent = Math.round((window.scrollY + window.innerHeight) / 
     document.documentElement.scrollHeight * 100);
-  if (currentDepth % 25 === 0 && currentDepth > lastScrollDepth) {
-    trackScroll();
-    lastScrollDepth = currentDepth;
+  if (scrollPercent > maxScroll) {
+    maxScroll = scrollPercent;
+    if (scrollPercent % 25 === 0) {
+      trackScroll();
+    }
   }
 });
 
-// Validate business information form
-function validateBusinessForm() {
+// Track section views
+const observerOptions = {
+  root: null,
+  rootMargin: '0px',
+  threshold: 0.5
+};
+
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      trackSectionView(entry.target.id);
+    }
+  });
+}, observerOptions);
+
+// Observe main sections
+document.querySelectorAll('section[id]').forEach(section => {
+  sectionObserver.observe(section);
+});
+
+// Get business information from forms
+function getBusinessInfo(buttonId) {
   try {
-    const form = document.getElementById('businessInfoForm');
-    if (!form) {
-      showTransactionMessage('Please fill out the business information form before proceeding.', true);
-      return false;
-    }
-
-    const companyName = form.querySelector('[name="companyName"]')?.value.trim();
-    const contactName = form.querySelector('[name="contactName"]')?.value.trim();
-    const phoneNumber = form.querySelector('[name="phoneNumber"]')?.value.trim();
-    const businessEmail = form.querySelector('[name="businessEmail"]')?.value.trim();
-
+    // Determine which form to get data from
+    const formSuffix = buttonId.includes('subscription') ? '-subscription' : '';
+    
+    const companyName = document.getElementById(`companyName${formSuffix}`)?.value || '';
+    const contactName = document.getElementById(`contactName${formSuffix}`)?.value || '';
+    const phoneNumber = document.getElementById(`phoneNumber${formSuffix}`)?.value || '';
+    const businessEmail = document.getElementById(`businessEmail${formSuffix}`)?.value || '';
+    
+    // Validate required fields
     if (!companyName || !contactName || !phoneNumber || !businessEmail) {
-      showTransactionMessage('Please fill in all business information fields before proceeding.', true);
+      showTransactionMessage('Please fill in all required business information.', true);
       return false;
     }
-
+    
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(businessEmail)) {
-      showTransactionMessage('Please enter a valid business email address.', true);
+      showTransactionMessage('Please enter a valid email address.', true);
       return false;
     }
 
@@ -205,317 +215,94 @@ function showTransactionMessage(message, isError = false) {
   msgElement.textContent = message;
   
   const pricing = document.querySelector('#pricing');
-  pricing.insertBefore(msgElement, pricing.firstChild);
+  if (pricing) {
+    pricing.insertBefore(msgElement, pricing.firstChild);
+  }
 
   setTimeout(() => msgElement.remove(), 15000); // Show message for 15 seconds
 }
 
-// Initialize PayPal buttons when ready
-window.addEventListener('paypal-ready', () => {
-  document.querySelectorAll('.paypal-button').forEach(button => {
-    const buttonConfig = {
-      fundingSource: paypal.FUNDING.PAYPAL,
-      style: {
-        layout: 'vertical',
-        shape: 'rect',
-        color: 'gold',
-        label: 'pay'
-      },
-      env: 'sandbox',
-      onClick: (data, actions) => {
-        return true;
-      },
-      createOrder: (data, actions) => {
-        try {
-          const price = parseFloat(button.dataset.price);
-          if (isNaN(price)) {
-            throw new Error('Invalid price');
-          }
-
-          // Business info will be collected by PayPal
-          // Handle subscription vs one-time purchase
-          if (button.id === 'paypal-subscription') {
-            return actions.subscription.create({
-              plan: {
-                billing_cycles: [{
-                  frequency: {
-                    interval_unit: 'YEAR',
-                    interval_count: 1
-                  },
-                  tenure_type: 'REGULAR',
-                  sequence: 1,
-                  total_cycles: 0,
-                  pricing_scheme: {
-                    fixed_price: {
-                      currency_code: 'USD',
-                      value: price.toFixed(2)
-                    }
-                  }
-                }],
-                payment_preferences: {
-                  auto_bill_outstanding: true,
-                  setup_fee: {
-                    currency_code: 'USD',
-                    value: '0'
-                  },
-                  setup_fee_failure_action: 'CANCEL',
-                  payment_failure_threshold: 3
-                },
-                taxes: {
-                  percentage: '0',
-                  inclusive: false
-                }
-              },
-              custom_id: 'subscription_' + Date.now(),
-              application_context: {
-                shipping_preference: 'GET_FROM_FILE',
-                user_action: 'SUBSCRIBE_NOW',
-                brand_name: 'Apex Image Gas',
-                landing_page: 'BILLING',
-                user_experience: 'MINIMAL'
-              },
-              subscriber: {}
-            });
-          }
-
-          // Single purchase
-          return actions.order.create({
-            intent: 'CAPTURE',
-            purchase_units: [{
-              description: '1L Gas Bottle - Single Purchase',
-              amount: {
-                currency_code: 'USD',
-                value: price.toFixed(2)
-              },
-              custom_id: 'purchase_' + Date.now()
-            }],
-            application_context: {
-              shipping_preference: 'GET_FROM_FILE',
-              user_action: 'PAY_NOW',
-              brand_name: 'Apex Image Gas',
-              landing_page: 'BILLING',
-              user_experience: 'MINIMAL'
-            }
-          });
-        } catch (error) {
-          console.error('Order creation error:', error);
-          showTransactionMessage('There was an error creating your order. Please try again.', true);
-          throw error;
-        }
-      },
-      onApprove: (data, actions) => {
-        showTransactionMessage('Processing your payment...', false);
-        
-        // Handle subscription approval
-        if (button.id === 'paypal-subscription') {
-          return actions.subscription.get()
-            .then((details) => {
-              const message = `Annual subscription activated successfully! Our team will contact you at ${details.subscriber.email_address} to coordinate your first delivery.`;
-              showTransactionMessage(message);
-              
-              // Track the subscription purchase
-              const subscriptionData = {
-                type: 'subscription',
-                email: details.subscriber.email_address,
-                subscriptionId: details.id,
-                status: details.status,
-                planId: details.plan_id,
-                startTime: details.start_time,
-                businessInfo: validateBusinessForm()
-              };
-              trackPurchase(subscriptionData);
-              
-              const form = document.getElementById('businessInfoForm');
-              if (form) {
-                form.reset();
-              }
-            })
-            .catch((error) => {
-              console.error('Subscription activation failed:', error);
-              showTransactionMessage('There was an error activating your subscription. Please try again or contact support.', true);
-            });
-        }
-        
-        // Handle one-time purchase approval
-        return actions.order.capture()
-          .then((details) => {
-              const message = `Transaction completed successfully! Our team will contact you at ${details.payer.email_address} to coordinate delivery.`;
-            showTransactionMessage(message);
-            
-            // Track the one-time purchase
-            const purchaseData = {
-              type: 'one_time',
-              email: details.payer.email_address,
-              amount: details.purchase_units[0].amount.value,
-              currency: details.purchase_units[0].amount.currency_code,
-              orderId: details.id,
-              status: details.status,
-              businessInfo: validateBusinessForm()
-            };
-            trackPurchase(purchaseData);
-            
-            const form = document.getElementById('businessInfoForm');
-            if (form) {
-              form.reset();
-            }
-          })
-          .catch((error) => {
-            console.error('Payment capture failed:', error);
-            showTransactionMessage('There was an error processing your payment. Please try again or contact support.', true);
-          });
-      },
-      onError: (err) => {
-        console.error('PayPal Error:', err);
-        showTransactionMessage('There was an error processing your payment. Please try again or contact support.', true);
-      },
-      onCancel: () => {
-        showTransactionMessage('Payment cancelled. Please try again when you are ready.', true);
+// Initialize Stripe checkout buttons
+function initializeStripeButtons() {
+  document.querySelectorAll('.stripe-button').forEach(button => {
+    button.addEventListener('click', async () => {
+      const priceType = button.dataset.type; // 'single' or 'subscription'
+      const businessInfo = getBusinessInfo(button.id);
+      
+      // Validate business info
+      if (!businessInfo) {
+        return;
       }
-    };
-
-    // Render PayPal button
-    paypal.Buttons(buttonConfig)
-      .render(button)
-      .catch((error) => {
-        console.error('PayPal button render error:', error);
-        button.innerHTML = '<p class="text-red-600">Payment system temporarily unavailable. Please try again later.</p>';
-      });
-  });
-});
-
-// Remove PayPal buttons from hero section if it exists
-window.addEventListener('load', () => {
-  const heroButtons = document.getElementById('paypal-buttons');
-  if (heroButtons) {
-    heroButtons.remove();
-  }
-});
-
-// Add styles for transaction messages
-const style = document.createElement('style');
-style.textContent = `
-  .transaction-message {
-    padding: 1rem;
-    margin: 1rem 0;
-    border-radius: 4px;
-    text-align: center;
-    animation: slideDown 0.3s ease-out;
-  }
-  
-  .transaction-message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-  }
-  
-  .transaction-message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-  }
-  
-  @keyframes slideDown {
-    from {
-      transform: translateY(-20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-`;
-document.head.appendChild(style);
-
-// Enhanced Image Interactions
-document.querySelectorAll('.product-image-container').forEach(container => {
-  const img = container.querySelector('.product-image');
-  
-  container.addEventListener('click', () => {
-    const modal = document.createElement('div');
-    modal.className = 'image-modal';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <img src="${img.src}" alt="${img.alt}">
-        <button class="close-modal">×</button>
-      </div>
-    `;
-    
-    document.body.appendChild(modal);
-    document.body.style.overflow = 'hidden';
-    
-    modal.querySelector('.close-modal').onclick = () => {
-      modal.remove();
-      document.body.style.overflow = '';
-    };
-    
-    modal.onclick = (e) => {
-      if (e.target === modal) {
-        modal.remove();
-        document.body.style.overflow = '';
+      
+      try {
+        showTransactionMessage('Redirecting to secure checkout...', false);
+        
+        // Create checkout session via Firebase Function
+        const createCheckoutSession = httpsCallable(functions, 'createCheckoutSession');
+        const { data } = await createCheckoutSession({
+          priceType: priceType === 'subscription' ? 'subscription' : 'single',
+          businessInfo: businessInfo,
+          successUrl: window.location.origin + '/success.html',
+          cancelUrl: window.location.origin + '/cancel.html'
+        });
+        
+        // Redirect to Stripe Checkout
+        if (data.url) {
+          window.location.href = data.url;
+        } else if (data.sessionId) {
+          // Fallback to client-side redirect
+          const { error } = await stripe.redirectToCheckout({
+            sessionId: data.sessionId
+          });
+          
+          if (error) {
+            console.error('Stripe redirect error:', error);
+            showTransactionMessage('Error redirecting to checkout. Please try again.', true);
+          }
+        }
+      } catch (error) {
+        console.error('Checkout error:', error);
+        showTransactionMessage('Error creating checkout session. Please try again.', true);
       }
-    };
+    });
   });
-});
+}
 
-// Add modal styles
-const modalStyle = document.createElement('style');
-modalStyle.textContent = `
-  .image-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    opacity: 0;
-    animation: fadeIn 0.3s ease forwards;
-  }
+// Handle success page
+if (window.location.pathname.includes('success.html')) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const sessionId = urlParams.get('session_id');
   
-  .modal-content {
-    position: relative;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-`;
-document.head.appendChild(modalStyle);
-
-// Enhanced Form Interactions
-const formInputs = document.querySelectorAll('.form-group input');
-formInputs.forEach(input => {
-  input.addEventListener('focus', () => {
-    input.parentElement.classList.add('focused');
-  });
-  
-  input.addEventListener('blur', () => {
-    input.parentElement.classList.remove('focused');
-    if (input.value.trim()) {
-      input.classList.add('filled');
-    } else {
-      input.classList.remove('filled');
-    }
-  });
-});
-
-// Smooth scroll for navigation
-document.querySelectorAll('nav a').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const targetId = link.getAttribute('href');
-    const targetElement = document.querySelector(targetId);
+  if (sessionId) {
+    // Track successful purchase
+    logEvent(analytics, 'purchase', {
+      transaction_id: sessionId,
+      value: urlParams.get('amount') || 0,
+      currency: 'USD'
+    });
     
-    if (targetElement) {
-      targetElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
+    // Google Ads conversion tracking
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-10810283428/F8c3CJH0heUCEKS40qUo',
+        'value': urlParams.get('amount') || 0,
+        'currency': 'USD',
+        'transaction_id': sessionId
       });
     }
+  }
+}
+
+// Handle cancel page
+if (window.location.pathname.includes('cancel.html')) {
+  logEvent(analytics, 'checkout_cancelled', {
+    page_path: window.location.pathname
   });
-});
+}
+
+// Track page view on load
+trackPageView();
+
+// Export functions for use in HTML
+window.trackFormSubmission = trackFormSubmission;
+window.trackPurchase = trackPurchase;
