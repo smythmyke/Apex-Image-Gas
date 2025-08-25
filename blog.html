@@ -4,8 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog - Apex Image Gas</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/apex_logo.png">
+    <link href="output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
+        :root {
+          /* Unified Design Tokens - matching index.html */
+          --bg: #FFFFFF;
+          --text: #0A0A0A;
+          --muted: #5A5F6A;
+          --primary: #0F766E;
+          --on-primary: #FFFFFF;
+          --accent: #2563EB;
+          --border: #E5E7EB;
+          --surface: #F8FAFC;
+          --success: #16A34A;
+          --warning: #F59E0B;
+          --danger: #DC2626;
+          
+          /* Border Radius */
+          --radius-8: 8px;
+          --radius-12: 12px;
+          
+          /* Shadows */
+          --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+          --shadow-md: 0 6px 16px rgba(0,0,0,.08);
+        }
+        
+        /* Reset & Base - matching index.html */
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        
+        body {
+          color: var(--text);
+          background: var(--bg);
+          line-height: 1.625;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+          font-size: 16px;
+        }
+        
+        /* Container */
+        .container {
+          max-width: 1200px;
+          padding: 0 16px;
+          margin: 0 auto;
+        }
+        
+        /* Typography - matching index.html */
+        .text-xl { font-size: 1.25rem; }
+        .font-bold { font-weight: 700; }
+        .text-muted { color: var(--muted); }
+        .text-primary { color: var(--primary); }
+        
+        /* Button Component - matching index.html */
+        .btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          height: 44px;
+          padding: 0 20px;
+          border-radius: var(--radius-12);
+          font-weight: 600;
+          font-size: 16px;
+          border: 1px solid transparent;
+          text-decoration: none;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          white-space: nowrap;
+        }
+        
+        .btn-primary {
+          background: var(--primary);
+          color: var(--on-primary);
+          border-color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+          filter: brightness(0.95);
+          transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+          background: #fff;
+          color: var(--primary);
+          border-color: var(--primary);
+        }
+        
+        .btn-secondary:hover {
+          background: var(--surface);
+        }
+        
+        .btn-sm {
+          height: 36px;
+          padding: 0 14px;
+          font-size: 14px;
+        }
+        
+        /* Flexbox utilities */
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        
+        /* Height utilities */
+        .h-10 { height: 2.5rem; }
+        .h-16 { height: 4rem; }
+        .w-4 { width: 1rem; }
+        .h-4 { height: 1rem; }
+        
+        /* Display utilities */
+        .hidden { display: none; }
+        .inline-flex { display: inline-flex; }
+        @media (min-width: 768px) {
+          .md\:block { display: block; }
+        }
+        
+        /* Hover utilities */
+        .hover\:text-primary:hover { color: var(--primary); }
+        .transition-colors { transition-property: color; transition-duration: 200ms; }
+        
+        /* Sticky header - matching index.html */
+        .sticky-header {
+          position: sticky;
+          top: 0;
+          z-index: 50;
+          background: var(--bg);
+          box-shadow: var(--shadow-sm);
+        }
+        
+        /* Screen reader only */
+        .sr-only {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          white-space: nowrap;
+          border-width: 0;
+        }
+        
+        /* Blog-specific styles */
         .blog-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -144,24 +289,37 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <header class="site-header">
-        <nav>
-            <div class="logo">
-                <img src="./Photos/Company_logo.png" alt="Apex Image Gas Logo">
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="products.html">Products</a></li>
-                <li><a href="services.html">Services</a></li>
-                <li><a href="blog.html" class="active">Blog</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main" class="sr-only focus:not-sr-only">Skip to main content</a>
+    
+    <!-- Navigation - matching index.html -->
+    <header class="sticky-header">
+        <div class="container">
+            <nav class="flex justify-between items-center h-16" role="navigation" aria-label="Main navigation">
+                <div class="flex items-center gap-3">
+                    <a href="index.html" class="flex items-center gap-3">
+                        <img src="images/apex_logo.png" alt="Apex Image Gas" class="h-10" width="40" height="40" loading="eager">
+                        <span class="text-xl font-bold">APEX Image Gas</span>
+                    </a>
+                </div>
+                <ul class="flex items-center gap-4">
+                    <li class="hidden md:block"><a href="index.html#about" class="text-muted hover:text-primary transition-colors">About</a></li>
+                    <li class="hidden md:block"><a href="index.html#product" class="text-muted hover:text-primary transition-colors">Product</a></li>
+                    <li class="hidden md:block"><a href="index.html#pricing" class="text-muted hover:text-primary transition-colors">Pricing</a></li>
+                    <li class="hidden md:block">
+                        <a href="blog.html" class="text-primary font-semibold transition-colors">Blog</a>
+                    </li>
+                    <li><a href="tel:+1234567890" class="btn btn-secondary btn-sm">Call</a></li>
+                    <li><a href="index.html#contact" class="btn btn-primary btn-sm">Quote</a></li>
+                    <li><a href="index.html#pricing" class="btn btn-primary btn-sm">Order</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <!-- Blog Content -->
-    <div class="blog-container">
+    <!-- Main Content -->
+    <main id="main">
+        <div class="blog-container">
         <div class="blog-header">
             <h1>Apex Gas Blog</h1>
             <p>Expert insights on medical imaging, X-ray technology, and healthcare equipment</p>
@@ -174,10 +332,11 @@
             <button class="filter-btn" data-category="industry-insights">Industry Insights</button>
         </div>
         
-        <div id="blog-grid" class="blog-grid">
-            <div class="loading">Loading blog posts...</div>
+            <div id="blog-grid" class="blog-grid">
+                <div class="loading">Loading blog posts...</div>
+            </div>
         </div>
-    </div>
+    </main>
 
     <!-- Footer -->
     <footer>
