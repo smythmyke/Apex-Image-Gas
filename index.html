@@ -527,26 +527,6 @@
     }
     
     /* Mobile Sticky CTA Bar */
-    @media (max-width: 768px) {
-      .mobile-cta-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: var(--bg);
-        border-top: 1px solid var(--border);
-        padding: 8px;
-        display: flex;
-        gap: 8px;
-        z-index: 40;
-      }
-      
-      .mobile-cta-bar .btn {
-        flex: 1;
-        height: 40px;
-        font-size: 14px;
-      }
-    }
   </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10943556560"></script>
@@ -581,7 +561,9 @@
               <span class="sr-only">(opens in new tab)</span>
             </a>
           </li>
-          <li><a href="#contact" class="btn btn-primary btn-sm">Request Quote</a></li>
+          <li><a href="tel:+1234567890" class="btn btn-secondary btn-sm">Call</a></li>
+          <li><a href="#contact" class="btn btn-primary btn-sm">Quote</a></li>
+          <li><a href="#pricing" class="btn btn-primary btn-sm">Order</a></li>
         </ul>
       </nav>
     </div>
@@ -1055,27 +1037,52 @@
                 </li>
               </ul>
             </div>
-            <form id="businessInfoForm-subscription" class="hidden">
-              <input type="text" id="companyName-subscription" name="companyName" placeholder="Company">
-              <input type="text" id="contactName-subscription" name="contactName" placeholder="Contact">
-              <input type="tel" id="phoneNumber-subscription" name="phoneNumber" placeholder="Phone">
-              <input type="email" id="businessEmail-subscription" name="businessEmail" placeholder="Email">
-              <select name="facilityType"><option value="">Type</option><option value="hospital">Hospital</option><option value="imaging_center">Imaging Center</option><option value="orthopedic">Orthopedic</option><option value="pediatric">Pediatric</option><option value="other">Other</option></select>
-            </form>
-            <button id="stripe-subscription" class="btn btn-primary" data-type="subscription">Purchase Now</button>
+            <div class="card-footer">
+              <form id="businessInfoForm-subscription" class="hidden">
+                <input type="text" id="companyName-subscription" name="companyName" placeholder="Company">
+                <input type="text" id="contactName-subscription" name="contactName" placeholder="Contact">
+                <input type="tel" id="phoneNumber-subscription" name="phoneNumber" placeholder="Phone">
+                <input type="email" id="businessEmail-subscription" name="businessEmail" placeholder="Email">
+                <select name="facilityType"><option value="">Type</option><option value="hospital">Hospital</option><option value="imaging_center">Imaging Center</option><option value="orthopedic">Orthopedic</option><option value="pediatric">Pediatric</option><option value="other">Other</option></select>
+              </form>
+              <button id="stripe-subscription" class="btn btn-primary" data-type="subscription">Purchase Now</button>
+            </div>
           </div>
           
-          <div class="premium-card bg-white rounded-lg shadow-2xl p-8 text-center border-2 border-purple-400 transform hover:scale-105 transition-transform">
-            <div class="bg-purple-600 text-white text-sm font-semibold px-3 py-1 rounded-full inline-block mb-4">CUSTOM PRICING</div>
-            <h4 class="text-2xl font-semibold mb-4">Request Quote</h4>
-            <p class="text-lg text-gray-600 mb-6">For bulk orders or<br>custom requirements</p>
-            <ul class="text-left text-sm text-gray-600 mb-6 space-y-2">
-              <li>✓ Volume discounts available</li>
-              <li>✓ Custom delivery schedules</li>
-              <li>✓ Installation & training included</li>
-              <li>✓ Dedicated account manager</li>
-            </ul>
-            <button onclick="openQuoteModal()" class="btn btn-primary">Request Quote</button>
+          <div class="card relative">
+            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <span class="bg-purple-600 text-white text-sm font-bold px-4 py-2 rounded-full">CUSTOM PRICING</span>
+            </div>
+            <div class="card-header text-center mt-4">
+              <h4 class="text-2xl font-semibold mb-4">Request Quote</h4>
+              <p class="text-4xl font-bold text-primary mb-2">Custom</p>
+              <p class="text-small text-muted">For bulk orders</p>
+            </div>
+            <div class="card-body">
+              <ul class="space-y-2 text-left">
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Volume discounts available</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Custom delivery schedules</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Installation & training</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer">
+              <button onclick="openQuoteModal()" class="btn btn-primary">Request Quote</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1237,7 +1244,7 @@
   </main>
 
   <footer>
-    <div class="bg-blue-600 text-white py-4">
+    <div class="bg-gray-900 text-white py-4">
       <div class="container mx-auto px-4 flex justify-between items-center">
         <div class="flex items-center space-x-4">
           <img src="images/apex_logo.png" alt="Apex Image Gas Logo" class="h-10 logo-shine">
@@ -1245,10 +1252,10 @@
         </div>
         <nav>
           <ul class="flex space-x-4">
-            <li><a href="#about" class="hover:text-blue-200">About</a></li>
-            <li><a href="#product" class="hover:text-blue-200">Product</a></li>
-            <li><a href="#pricing" class="hover:text-blue-200">Pricing</a></li>
-            <li><a href="#contact" class="hover:text-blue-200">Contact</a></li>
+            <li><a href="#about" class="text-gray-300 hover:text-white">About</a></li>
+            <li><a href="#product" class="text-gray-300 hover:text-white">Product</a></li>
+            <li><a href="#pricing" class="text-gray-300 hover:text-white">Pricing</a></li>
+            <li><a href="#contact" class="text-gray-300 hover:text-white">Contact</a></li>
           </ul>
         </nav>
       </div>
@@ -1259,10 +1266,10 @@
         <div class="grid md:grid-cols-2 gap-8">
           <div class="footer-contact space-y-4">
             <h4 class="text-xl font-semibold">About Us</h4>
-            <p class="text-gray-300">Authorized distributor of medical-grade gas mixtures for EOS 3.5 X-ray machines.</p>
+            <p class="text-gray-400">Authorized distributor of medical-grade gas mixtures for EOS 3.5 X-ray machines.</p>
           </div>
           <div class="footer-legal space-y-4">
-            <p class="text-gray-300">&copy; 2024 Apex Image Gas. All rights reserved.</p>
+            <p class="text-gray-400">&copy; 2024 Apex Image Gas. All rights reserved.</p>
             <ul class="flex space-x-4">
               <li>
                 <a href="terms.html" class="text-blue-400 hover:text-blue-300">Terms of Service</a>
@@ -1513,13 +1520,6 @@
       }
     }
   </script>
-  <!-- Mobile Sticky CTA Bar -->
-  <div class="mobile-cta-bar md:hidden">
-    <a href="tel:+1234567890" class="btn btn-secondary">Call</a>
-    <a href="#contact" class="btn btn-primary">Quote</a>
-    <a href="#pricing" class="btn btn-primary">Order</a>
-  </div>
-
   <!-- Back to Top Button -->
   <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Back to top">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
