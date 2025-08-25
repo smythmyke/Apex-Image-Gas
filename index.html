@@ -167,7 +167,7 @@
     
     /* Card Component */
     .card {
-      padding: var(--space-8);
+      padding: 2rem;
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
@@ -175,7 +175,7 @@
       transition: all 0.2s ease;
       display: flex;
       flex-direction: column;
-      height: 100%;
+      min-height: 480px;
     }
     
     .card:hover {
@@ -184,16 +184,19 @@
     }
     
     .card-header {
-      margin-bottom: var(--space-6);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
     }
     
     .card-body {
       flex-grow: 1;
-      margin-bottom: var(--space-6);
+      margin-bottom: 1.5rem;
+      padding: 0 0.5rem;
     }
     
     .card-footer {
       margin-top: auto;
+      padding-top: 1rem;
     }
     
     /* Standardized Button Component */
@@ -938,32 +941,32 @@
         <p class="text-center text-gray-100 mb-12 text-lg font-medium">Free shipping included on all orders • Installation services available</p>
 
         <div class="mb-16">
-          <div class="bg-white/95 backdrop-blur rounded-xl shadow-2xl p-8 max-w-2xl mx-auto border border-white/20">
-            <h4 class="text-2xl font-semibold mb-6 text-gray-800">White Glove Delivery Process</h4>
-            <p class="mb-6 text-gray-600">For your security and convenience:</p>
+          <div class="bg-white rounded-xl shadow-2xl p-8 max-w-2xl mx-auto border-2 border-purple-300">
+            <h4 class="text-2xl font-semibold mb-6 text-gray-900">White Glove Delivery Process</h4>
+            <p class="mb-6 text-gray-700 font-medium">For your security and convenience:</p>
             <ol class="process-list">
               <li>
                 <div class="process-item">
-                  <strong class="process-title text-gray-800">Order Processing</strong>
-                  <span class="text-gray-600 text-small">We'll process your delivery request within 24 hours</span>
+                  <strong class="process-title text-gray-900">Order Processing</strong>
+                  <span class="text-gray-700 text-small">We'll process your delivery request within 24 hours</span>
                 </div>
               </li>
               <li>
                 <div class="process-item">
-                  <strong class="process-title text-gray-800">Shipping Confirmation</strong>
-                  <span class="text-gray-600 text-small">Address confirmation and tracking provided (FREE SHIPPING)</span>
+                  <strong class="process-title text-gray-900">Shipping Confirmation</strong>
+                  <span class="text-gray-700 text-small">Address confirmation and tracking provided (FREE SHIPPING)</span>
                 </div>
               </li>
               <li>
                 <div class="process-item">
-                  <strong class="process-title text-gray-800">Professional Delivery</strong>
-                  <span class="text-gray-600 text-small">Direct to your facility with installation support available</span>
+                  <strong class="process-title text-gray-900">Professional Delivery</strong>
+                  <span class="text-gray-700 text-small">Direct to your facility with installation support available</span>
                 </div>
               </li>
               <li>
                 <div class="process-item">
-                  <strong class="process-title text-gray-800">Secure Payment</strong>
-                  <span class="text-gray-600 text-small">Enterprise-grade payment processing protection</span>
+                  <strong class="process-title text-gray-900">Secure Payment</strong>
+                  <span class="text-gray-700 text-small">Enterprise-grade payment processing protection</span>
                 </div>
               </li>
             </ol>
@@ -982,24 +985,24 @@
               <p class="text-small text-success font-medium">Save $5,000-$10,000 vs OEM</p>
             </div>
             <div class="card-body">
-              <ul class="space-y-3 text-left">
+              <ul class="space-y-4 text-left">
                 <li class="flex items-start">
-                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Immediate delivery available</span>
+                  <span class="text-base">Immediate delivery available</span>
                 </li>
                 <li class="flex items-start">
-                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Free shipping included</span>
+                  <span class="text-base">Free shipping included</span>
                 </li>
                 <li class="flex items-start">
-                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Installation support</span>
+                  <span class="text-base">Installation support</span>
                 </li>
               </ul>
             </div>
@@ -1018,24 +1021,24 @@
               <p class="text-small text-success font-medium">Extra $500 savings!</p>
             </div>
             <div class="card-body">
-              <ul class="space-y-3 text-left">
+              <ul class="space-y-4 text-left">
                 <li class="flex items-start">
-                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Guaranteed annual supply</span>
+                  <span class="text-base">Guaranteed annual supply</span>
                 </li>
                 <li class="flex items-start">
-                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Priority shipping</span>
+                  <span class="text-base">Priority shipping</span>
                 </li>
                 <li class="flex items-start">
-                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Dedicated support</span>
+                  <span class="text-base">Dedicated support</span>
                 </li>
               </ul>
             </div>
@@ -1061,30 +1064,30 @@
               <p class="text-small text-muted">custom requirements</p>
             </div>
             <div class="card-body">
-              <ul class="space-y-3 text-left">
+              <ul class="space-y-4 text-left">
                 <li class="flex items-start">
-                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Volume discounts available</span>
+                  <span class="text-base">Volume discounts available</span>
                 </li>
                 <li class="flex items-start">
-                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Custom delivery schedules</span>
+                  <span class="text-base">Custom delivery schedules</span>
                 </li>
                 <li class="flex items-start">
-                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Installation & training included</span>
+                  <span class="text-base">Installation & training included</span>
                 </li>
                 <li class="flex items-start">
-                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-success mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Dedicated account manager</span>
+                  <span class="text-base">Dedicated account manager</span>
                 </li>
               </ul>
             </div>
