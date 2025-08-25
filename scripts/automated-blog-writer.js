@@ -32,6 +32,10 @@ class AutomatedBlogWriter {
    * Initialize Gemini AI with API key from Firestore
    */
   async initializeGemini() {
+    // DISABLED TO REDUCE GEMINI API COSTS
+    // To re-enable: Remove this throw statement
+    throw new Error('Gemini API is currently disabled to reduce costs. Remove this throw statement in initializeGemini() to re-enable.');
+    
     if (this.apiKeyLoaded) return;
 
     try {

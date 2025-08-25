@@ -2,23 +2,24 @@
 const {onSchedule} = require("firebase-functions/v2/scheduler");
 const {onRequest} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
-const {GoogleGenerativeAI} = require("@google/generative-ai");
+// const {GoogleGenerativeAI} = require("@google/generative-ai"); // Disabled while Gemini API is disabled
 const admin = require("firebase-admin");
-const axios = require("axios");
+// const axios = require("axios"); // Disabled while Gemini API functions are disabled
 
 // Initialize admin if not already initialized
 if (!admin.apps.length) {
   admin.initializeApp();
 }
 
-const db = admin.firestore();
+// const db = admin.firestore(); // Disabled while Gemini API functions are disabled
 
 // Blog categories and their publishing days
-const BLOG_SCHEDULE = {
-  tuesday: "technology",
-  thursday: "health-safety",
-  saturday: "industry-insights",
-};
+// DISABLED - Commented out to avoid linting errors while functions are disabled
+// const BLOG_SCHEDULE = {
+//   tuesday: "technology",
+//   thursday: "health-safety",
+//   saturday: "industry-insights",
+// };
 
 /**
  * Scheduled blog publisher - runs 3 times per week
@@ -32,6 +33,15 @@ exports.scheduledBlogPublisher = onSchedule({
   memory: "1GiB",
   timeoutSeconds: 540,
 }, async (event) => {
+  // DISABLED TO REDUCE GEMINI API COSTS
+  // To re-enable: Remove this return statement and the disabled message
+  logger.info("Scheduled blog publication is DISABLED to reduce Gemini API costs");
+  return {
+    success: false,
+    message: "Scheduled blog publication is currently disabled to reduce API costs. Remove the early return in scheduledBlogPublisher.js to re-enable.",
+  };
+
+  /* Original function code starts here - currently disabled
   logger.info("Starting scheduled blog publication");
 
   try {
@@ -157,6 +167,7 @@ exports.scheduledBlogPublisher = onSchedule({
 
     throw error;
   }
+  */ // End of disabled code
 });
 
 /**
@@ -170,6 +181,16 @@ exports.generateBlogManually = onRequest({
   memory: "1GiB",
   timeoutSeconds: 300,
 }, async (req, res) => {
+  // DISABLED TO REDUCE GEMINI API COSTS
+  // To re-enable: Remove this return statement and the disabled message
+  logger.info("Manual blog generation is DISABLED to reduce Gemini API costs");
+  res.status(503).json({
+    success: false,
+    error: "Manual blog generation is currently disabled to reduce API costs. Remove the early return in generateBlogManually to re-enable.",
+  });
+  return;
+
+  /* Original function code starts here - currently disabled
   if (req.method !== "POST") {
     res.status(405).send("Method not allowed");
     return;
@@ -241,9 +262,11 @@ exports.generateBlogManually = onRequest({
     logger.error("Manual blog generation failed:", error);
     res.status(500).json({error: error.message});
   }
+  */ // End of disabled code
 });
 
-// Helper functions
+// Helper functions - DISABLED while Gemini API is disabled
+/* eslint-disable no-unused-vars */
 
 /**
  * Generate a new topic using Gemini AI
@@ -251,7 +274,7 @@ exports.generateBlogManually = onRequest({
  * @param {string} category - The blog category
  * @return {Promise<string>} The generated topic
  */
-async function generateNewTopic(apiKey, category) {
+/* async function generateNewTopic(apiKey, category) {
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({model: "gemini-2.0-flash-exp"});
 
@@ -269,7 +292,7 @@ Return only the topic title, nothing else.`;
   const result = await model.generateContent(prompt);
   const response = await result.response;
   return response.text().trim();
-}
+} */
 
 /**
  * Generate blog content using Gemini AI
@@ -278,7 +301,7 @@ Return only the topic title, nothing else.`;
  * @param {string} category - The blog category
  * @return {Promise<Object>} The generated blog content
  */
-async function generateBlogContent(apiKey, topic, category) {
+/* async function generateBlogContent(apiKey, topic, category) {
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({model: "gemini-2.0-flash-exp"});
 
@@ -314,7 +337,7 @@ Generate SEO metadata in JSON format:
     wordCount: content.split(" ").length,
     ...seoData,
   };
-}
+} */
 
 /**
  * Select an image from Pexels API with duplicate prevention
@@ -323,7 +346,7 @@ Generate SEO metadata in JSON format:
  * @param {string} blogId - The blog ID for tracking
  * @return {Promise<Object>} The selected image data
  */
-async function selectPexelsImage(apiKey, topic, blogId) {
+/* async function selectPexelsImage(apiKey, topic, blogId) {
   // Generate dynamic search queries based on topic
   const topicWords = topic.toLowerCase()
       .split(" ")
@@ -430,7 +453,7 @@ async function selectPexelsImage(apiKey, topic, blogId) {
     ...fallbackImage,
     credit: "Photo by Pexels",
   };
-}
+} */
 
 /**
  * Post blog to social media platforms
@@ -439,7 +462,7 @@ async function selectPexelsImage(apiKey, topic, blogId) {
  * @param {string} blogId - The blog ID
  * @return {Promise<void>}
  */
-async function postToSocialMedia(apiKeys, blogDoc, blogId) {
+/* async function postToSocialMedia(apiKeys, blogDoc, blogId) {
   const blogUrl = `https://blog.apeximagegas.net/${blogDoc.slug}`;
 
   // LinkedIn post
@@ -481,4 +504,6 @@ async function postToSocialMedia(apiKeys, blogDoc, blogId) {
       logger.error("Facebook posting failed:", error);
     }
   }
-}
+} */
+
+/* eslint-enable no-unused-vars */

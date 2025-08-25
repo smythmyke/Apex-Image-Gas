@@ -7,6 +7,547 @@
   <link rel="icon" type="image/x-icon" href="images/apex_logo.png">
   <link href="output.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Unified Design Tokens */
+      --bg: #FFFFFF;
+      --text: #0A0A0A;
+      --muted: #5A5F6A;
+      --primary: #0F766E;
+      --on-primary: #FFFFFF;
+      --accent: #2563EB;
+      --border: #E5E7EB;
+      --surface: #F8FAFC;
+      --success: #16A34A;
+      --warning: #F59E0B;
+      --danger: #DC2626;
+      
+      /* Border Radius */
+      --radius-8: 8px;
+      --radius-12: 12px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+      --shadow-md: 0 6px 16px rgba(0,0,0,.08);
+    }
+    
+    /* Reset & Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.625;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 16px;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 1200px;
+      padding: 0 16px;
+      margin: 0 auto;
+    }
+    
+    /* Section Layout - Compressed */
+    section {
+      padding: 48px 16px;
+      margin: 0;
+    }
+    
+    @media (max-width: 768px) {
+      section {
+        padding: 32px 16px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      section {
+        padding: 24px 16px;
+      }
+    }
+    
+    /* Focus Styles */
+    *:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    
+    a:focus-visible {
+      text-decoration: underline;
+    }
+    
+    /* Typography Scale */
+    h1 {
+      font-size: 2.5rem;
+      line-height: 3rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    h2 {
+      font-size: 2rem;
+      line-height: 2.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      line-height: 2rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+    
+    p {
+      font-size: 1rem;
+      line-height: 1.625rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    
+    .text-small {
+      font-size: 0.875rem;
+      line-height: 1.375rem;
+    }
+    
+    .text-muted {
+      color: var(--muted);
+    }
+    
+    .text-primary {
+      color: var(--primary);
+    }
+    
+    .text-success {
+      color: var(--success);
+    }
+    
+    .bg-primary {
+      background-color: var(--primary);
+    }
+    
+    .bg-success {
+      background-color: var(--success);
+    }
+    
+    /* Icon Styling - 25% larger */
+    .icon-enhanced {
+      width: 2.5rem !important;
+      height: 2.5rem !important;
+      color: var(--primary-blue) !important;
+      margin-right: 1rem;
+    }
+    
+    svg {
+      width: 1.875rem !important;
+      height: 1.875rem !important;
+      color: var(--primary-blue) !important;
+    }
+    
+    /* Icon text styling */
+    .icon-text {
+      font-size: 1rem;
+      vertical-align: middle;
+    }
+    
+    /* Card Component */
+    .card {
+      padding: var(--space-8);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .card-header {
+      margin-bottom: var(--space-6);
+    }
+    
+    .card-body {
+      flex-grow: 1;
+      margin-bottom: var(--space-6);
+    }
+    
+    .card-footer {
+      margin-top: auto;
+    }
+    
+    /* Standardized Button Component */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 44px;
+      padding: 0 20px;
+      border-radius: var(--radius-12);
+      font-weight: 600;
+      font-size: 16px;
+      border: 1px solid transparent;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+    
+    .btn-primary:hover {
+      filter: brightness(0.95);
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: #fff;
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--surface);
+    }
+    
+    .btn:focus-visible {
+      outline: 3px solid #94D3C5;
+      outline-offset: 2px;
+    }
+    
+    .btn-sm {
+      height: 36px;
+      padding: 0 14px;
+      font-size: 14px;
+    }
+    
+    .btn-lg {
+      height: 52px;
+      padding: 0 24px;
+      font-size: 18px;
+    }
+    
+    .btn-block {
+      width: 100%;
+    }
+    
+    /* Form Field Component */
+    .field {
+      margin-bottom: 16px;
+    }
+    
+    .field label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-8);
+      padding: 0 12px;
+      background: #fff;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+    
+    .field textarea {
+      height: auto;
+      min-height: 104px;
+      padding: 10px 12px;
+      resize: vertical;
+    }
+    
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none !important;
+      border-color: var(--primary-blue) !important;
+      box-shadow: 0 0 0 3px rgba(0,123,255,0.1) !important;
+    }
+    
+    /* Background Colors */
+    .bg-light {
+      background-color: var(--light-gray) !important;
+    }
+    
+    /* Hero Section - Keep gradient but ensure text contrast */
+    #hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%) !important;
+      min-height: 600px;
+    }
+    
+    #hero h2, #hero p, #hero span {
+      color: white !important;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    /* Section backgrounds */
+    #about, #contact {
+      background-color: var(--light-gray) !important;
+    }
+    
+    #pricing {
+      background-color: var(--light-gray) !important;
+    }
+    
+    #pricing h3, #pricing h4 {
+      color: var(--dark-gray) !important;
+    }
+    
+    #pricing .text-white {
+      color: var(--dark-gray) !important;
+    }
+    
+    /* Grid Layout Fix */
+    @media (min-width: 1024px) {
+      .grid.lg\:grid-cols-3 {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 2.5rem !important;
+      }
+    }
+    
+    /* Purchase Now Button for cards */
+    .btn-purchase {
+      background-color: var(--primary-blue) !important;
+      color: var(--white) !important;
+      padding: 12px 24px !important;
+      font-size: 1rem !important;
+      font-weight: 600 !important;
+      border: none !important;
+      border-radius: 5px !important;
+      cursor: pointer;
+      transition: all 0.3s ease !important;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    
+    .btn-purchase:hover {
+      background-color: #0056b3 !important;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,123,255,0.3) !important;
+    }
+    
+    /* Contact form button */
+    button[type="submit"] {
+      background-color: var(--primary-blue) !important;
+      color: var(--white) !important;
+      padding: 15px 30px !important;
+      font-size: 1.1rem !important;
+      font-weight: 600 !important;
+      border: none !important;
+      border-radius: 5px !important;
+      cursor: pointer;
+      transition: all 0.3s ease !important;
+      width: 100%;
+    }
+    
+    button[type="submit"]:hover {
+      background-color: #0056b3 !important;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,123,255,0.3) !important;
+    }
+    
+    /* Process List - Fixed Counters */
+    .process ol {
+      counter-reset: step;
+      padding-left: 0;
+      list-style: none;
+    }
+    
+    .process li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      margin: 10px 0;
+    }
+    
+    .process li::before {
+      counter-increment: step;
+      content: counter(step);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    
+    /* Tabs Component */
+    .tabs {
+      background: var(--surface);
+      border-radius: var(--radius-12);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+    }
+    
+    .tab-list {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    
+    .tab-button {
+      padding: 8px 16px;
+      background: none;
+      border: none;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .tab-button.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    
+    .tab-panel {
+      display: none;
+    }
+    
+    .tab-panel.active {
+      display: block;
+    }
+    
+    /* Accordion Component */
+    .accordion {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-8);
+      overflow: hidden;
+    }
+    
+    .accordion-item {
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .accordion-item:last-child {
+      border-bottom: none;
+    }
+    
+    .accordion-trigger {
+      width: 100%;
+      padding: 16px;
+      background: var(--bg);
+      border: none;
+      text-align: left;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+    }
+    
+    .accordion-trigger:hover {
+      background: var(--surface);
+    }
+    
+    .accordion-content {
+      padding: 0 16px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .accordion-item.active .accordion-content {
+      padding: 16px;
+      max-height: 500px;
+    }
+    
+    /* Utility Classes */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+    
+    .focus\:not-sr-only:focus {
+      position: static;
+      width: auto;
+      height: auto;
+      padding: 0;
+      margin: 0;
+      overflow: visible;
+      clip: auto;
+      white-space: normal;
+    }
+    
+    /* Sticky Utilities */
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Mobile Sticky CTA Bar */
+    @media (max-width: 768px) {
+      .mobile-cta-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--bg);
+        border-top: 1px solid var(--border);
+        padding: 8px;
+        display: flex;
+        gap: 8px;
+        z-index: 40;
+      }
+      
+      .mobile-cta-bar .btn {
+        flex: 1;
+        height: 40px;
+        font-size: 14px;
+      }
+    }
+  </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10943556560"></script>
   <script>
@@ -18,37 +559,157 @@
   </script>
 </head>
 <body>
-  <header class="bg-blue-600 text-white py-4">
-    <div class="container mx-auto px-4 flex justify-between items-center">
-      <div class="flex items-center space-x-4">
-        <img src="images/apex_logo.png" alt="Apex Image Gas Logo" class="h-10 logo-shine">
-        <h1 class="text-2xl font-bold"><span style="font-family: 'Orbitron', sans-serif;">APEX</span> Image Gas</h1>
-      </div>
-      <nav>
-        <ul class="flex space-x-4">
-          <li><a href="#about" class="hover:text-blue-200">About</a></li>
-          <li><a href="#product" class="hover:text-blue-200">Product</a></li>
-          <li><a href="#pricing" class="hover:text-blue-200">Pricing</a></li>
-          <li><a href="https://blog.apeximagegas.net" class="hover:text-blue-200">Blog</a></li>
-          <li><a href="#contact" class="hover:text-blue-200">Contact</a></li>
+  <!-- Skip to main content for accessibility -->
+  <a href="#main" class="sr-only focus:not-sr-only">Skip to main content</a>
+  <header class="sticky-header">
+    <div class="container">
+      <nav class="flex justify-between items-center h-16" role="navigation" aria-label="Main navigation">
+        <div class="flex items-center gap-3">
+          <img src="images/apex_logo.png" alt="Apex Image Gas" class="h-10" width="40" height="40" loading="eager">
+          <span class="text-xl font-bold">APEX Image Gas</span>
+        </div>
+        <ul class="flex items-center gap-4">
+          <li class="hidden md:block"><a href="#about" class="text-muted hover:text-primary transition-colors">About</a></li>
+          <li class="hidden md:block"><a href="#product" class="text-muted hover:text-primary transition-colors">Product</a></li>
+          <li class="hidden md:block"><a href="#pricing" class="text-muted hover:text-primary transition-colors">Pricing</a></li>
+          <li class="hidden md:block">
+            <a href="https://blog.apeximagegas.net" target="_blank" rel="noopener noreferrer" class="text-muted hover:text-primary transition-colors inline-flex items-center gap-1">
+              Blog
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
+              <span class="sr-only">(opens in new tab)</span>
+            </a>
+          </li>
+          <li><a href="#contact" class="btn btn-primary btn-sm">Request Quote</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <main>
-    <section id="hero" class="bg-blue-50 py-16">
-      <div class="container mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold mb-4">Specialized Gas Mixture for EOS 3.5 X-Ray Machines</h2>
-        <p class="text-xl text-gray-600 mb-8">1 Liter 3.7% Ethane BAL Xenon - Optimized for Clear X-ray Imaging</p>
+  <main id="main">
+    <section id="hero" class="bg-gradient-to-br from-slate-900 to-blue-900" role="banner" style="padding: 32px 16px;">
+      <div class="container text-center">
+        <!-- Compact single-line badges -->
+        <div class="flex flex-wrap justify-center gap-2 mb-4">
+          <span class="inline-flex items-center bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            ✓ Limited Stock: <span id="stock-counter">10</span> available
+          </span>
+          <span class="inline-flex items-center bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            ✓ Free Shipping
+          </span>
+          <span class="inline-flex items-center bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            ✓ 8-12 Months Use
+          </span>
+        </div>
+        
+        <h1 class="text-4xl md:text-5xl font-bold mb-3 text-white">Save $10,000+ on EOS 3.5 Gas</h1>
+        <p class="text-xl text-white mb-4">
+          <span class="line-through opacity-75">OEM: $15,000-$20,000</span>
+          <span class="text-green-400 font-bold ml-3">Our Price: $9,499</span>
+        </p>
+        
+        <!-- Primary CTAs -->
+        <div class="flex justify-center gap-3 mb-6">
+          <a href="#contact" class="btn btn-primary btn-lg">Request Quote</a>
+          <a href="tel:+1234567890" class="btn btn-secondary btn-lg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+            </svg>
+            Call Now
+          </a>
+        </div>
+        
+        <div class="bg-black/80 backdrop-blur rounded-lg p-6 max-w-3xl mx-auto mb-8 border border-white/20">
+          <h3 class="text-xl font-semibold text-white mb-3">Why Such Dramatic Savings?</h3>
+          <div class="grid md:grid-cols-3 gap-4 text-white">
+            <div class="flex flex-col items-center">
+              <svg class="w-6 h-6 mb-2 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"/>
+              </svg>
+              <p class="text-sm font-semibold">We buy in bulk</p>
+            </div>
+            <div class="flex flex-col items-center">
+              <svg class="w-6 h-6 mb-2 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 7H7v6h6V7z"/>
+                <path fill-rule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2z"/>
+              </svg>
+              <p class="text-sm font-semibold">Direct distribution</p>
+            </div>
+            <div class="flex flex-col items-center">
+              <svg class="w-6 h-6 mb-2 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+              </svg>
+              <p class="text-sm font-semibold">No OEM markup</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-black/60 border-2 border-yellow-500 rounded-lg p-4 max-w-2xl mx-auto mb-8">
+          <p class="text-yellow-300 text-lg font-semibold">
+            ⚠️ <strong>For EOS machine owners losing manufacturer support:</strong> Don't pay inflated OEM prices!
+          </p>
+        </div>
+        
+        <div class="inline-flex items-center gap-4 mb-8">
+          <span class="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+            ✓ FREE SHIPPING INCLUDED
+          </span>
+          <span class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+            ✓ 8-12 MONTHS TYPICAL USE
+          </span>
+          <span class="bg-purple-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+            ✓ INSTALLATION AVAILABLE
+          </span>
+        </div>
+        
         <div id="stripe-buttons" class="max-w-md mx-auto"></div>
       </div>
     </section>
 
-    <section id="about" class="py-16">
+    <section id="about" class="py-16 bg-gradient-to-b from-white to-gray-50">
       <div class="container mx-auto px-4">
-        <h3 class="text-3xl font-bold mb-8 text-center">About Our Product</h3>
-        <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto text-center">We provide medical-grade gas mixtures specifically formulated for optimal performance in EOS 3.5 X-ray machines. The carefully balanced composition of 3.7% Ethane with Xenon ensures superior image clarity and consistent results in your diagnostic imaging procedures. Please note: We sell but do not manufacture the gas - all bottles are factory-sealed with original manufacturer safety documentation.</p>
+        <h3 class="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Why Healthcare Facilities Choose Us</h3>
+        
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-1 max-w-4xl mx-auto mb-8">
+          <div class="bg-white rounded-lg p-8">
+            <div class="grid md:grid-cols-2 gap-8 mb-6">
+              <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded">
+                <h4 class="font-bold text-xl mb-2 text-red-800">The Problem</h4>
+                <ul class="space-y-2 text-gray-700">
+                  <li>• EOS manufacturers discontinuing support</li>
+                  <li>• Forced to pay $15,000-$20,000 per bottle</li>
+                  <li>• Long lead times from OEM</li>
+                  <li>• No alternative suppliers available</li>
+                </ul>
+              </div>
+              <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded">
+                <h4 class="font-bold text-xl mb-2 text-green-800">Our Solution</h4>
+                <ul class="space-y-2 text-gray-700">
+                  <li>• Same quality gas at 50% less cost</li>
+                  <li>• Bulk purchasing = dramatic savings</li>
+                  <li>• Fast delivery with free shipping</li>
+                  <li>• Installation support available</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="bg-blue-50 rounded-lg p-6">
+              <h4 class="font-bold text-xl mb-3 text-blue-800">📊 Bottle Lifespan & Usage</h4>
+              <p class="text-gray-700 mb-3">
+                <strong>Expected Duration:</strong> 8-12 months of typical use per bottle
+              </p>
+              <p class="text-sm text-gray-600">
+                <em>Note: Actual lifespan depends on your system's inherent leak rate. Systems vary based on seal condition, usage frequency, and maintenance schedule. Most facilities report 8-12 months as nominal usage period.</em>
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <p class="text-lg text-gray-700 mb-8 max-w-3xl mx-auto text-center">
+          We provide medical-grade gas mixtures specifically formulated for optimal performance in EOS 3.5 X-ray machines. The carefully balanced composition of 3.7% Ethane with Xenon ensures superior image clarity and consistent results in your diagnostic imaging procedures.
+        </p>
         
         <div class="specifications bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
           <h4 class="text-2xl font-semibold mb-6">Technical Specifications:</h4>
@@ -289,173 +950,188 @@
       </div>
     </section>
 
-    <section id="pricing" class="py-16 bg-blue-50">
+    <section id="pricing" class="py-20 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div class="container mx-auto px-4">
-        <h3 class="text-3xl font-bold mb-12 text-center">Pricing Options</h3>
+        <h3 class="text-4xl font-bold mb-4 text-center text-white">Pricing Options</h3>
+        <p class="text-center text-gray-100 mb-12 text-lg font-medium">Free shipping included on all orders • Installation services available</p>
 
         <div class="mb-16">
-          <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl mx-auto">
-            <h4 class="text-2xl font-semibold mb-6">Delivery Process</h4>
-            <p class="text-gray-600 mb-6">For your security and convenience:</p>
-            <ol class="space-y-4">
-              <li class="flex items-start space-x-4">
-                <span class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0">1</span>
-                <span class="text-gray-700">Once you submit your order, we'll process your delivery request</span>
+          <div class="premium-card max-w-2xl mx-auto">
+            <h4 class="text-2xl font-semibold mb-6">White Glove Delivery Process</h4>
+            <p class="mb-6 text-muted">For your security and convenience:</p>
+            <ol class="process-list">
+              <li>
+                <div class="process-item">
+                  <strong class="process-title">Order Processing</strong>
+                  <span class="text-muted text-small">We'll process your delivery request within 24 hours</span>
+                </div>
               </li>
-              <li class="flex items-start space-x-4">
-                <span class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0">2</span>
-                <span class="text-gray-700">We'll confirm your address and provide a tracking number</span>
+              <li>
+                <div class="process-item">
+                  <strong class="process-title">Shipping Confirmation</strong>
+                  <span class="text-muted text-small">Address confirmation and tracking provided (FREE SHIPPING)</span>
+                </div>
               </li>
-              <li class="flex items-start space-x-4">
-                <span class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0">3</span>
-                <span class="text-gray-700">We'll ship the gas bottle to your location</span>
+              <li>
+                <div class="process-item">
+                  <strong class="process-title">Professional Delivery</strong>
+                  <span class="text-muted text-small">Direct to your facility with installation support available</span>
+                </div>
               </li>
-              <li class="flex items-start space-x-4">
-                <span class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0">4</span>
-                <span class="text-gray-700">After you confirm receipt, we'll process your payment</span>
+              <li>
+                <div class="process-item">
+                  <strong class="process-title">Secure Payment</strong>
+                  <span class="text-muted text-small">Enterprise-grade payment processing protection</span>
+                </div>
               </li>
             </ol>
           </div>
 
         </div>
 
-        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
-            <h4 class="text-2xl font-semibold mb-4">Single Purchase</h4>
-            <p class="text-4xl font-bold text-blue-600 mb-6">$9,999</p>
-            <form id="businessInfoForm" class="mb-4 text-left">
-              <div class="space-y-3">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700">Company Name</label>
-                  <input type="text" id="companyName" name="companyName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700">Contact Name</label>
-                  <input type="text" id="contactName" name="contactName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700">Phone Number</label>
-                  <input type="tel" id="phoneNumber" name="phoneNumber" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700">Business Email</label>
-                  <input type="email" id="businessEmail" name="businessEmail" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700">Facility Type</label>
-                  <select name="facilityType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required>
-                    <option value="">Select Facility Type</option>
-                    <option value="hospital">Hospital</option>
-                    <option value="imaging_center">Imaging Center</option>
-                    <option value="orthopedic">Orthopedic Clinic</option>
-                    <option value="pediatric">Pediatric Facility</option>
-                    <option value="other">Other Medical Facility</option>
-                  </select>
-                </div>
-              </div>
-            </form>
-            <button id="stripe-single" class="stripe-button bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 w-full" data-type="single">Pay with Stripe</button>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div class="card">
+            <div class="card-header text-center">
+              <span class="inline-block px-3 py-1 text-sm font-semibold text-white bg-primary rounded-full mb-4">MOST POPULAR</span>
+              <h4 class="text-2xl font-semibold mb-4">Single Purchase</h4>
+              <p class="text-4xl font-bold text-primary mb-2">$9,999</p>
+              <p class="text-small text-success">Save $5,000-$10,000 vs OEM</p>
+            </div>
+            <div class="card-body">
+              <ul class="space-y-2 text-left">
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Immediate delivery available</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Free shipping included</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Installation support</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer">
+              <button id="stripe-single" class="btn btn-primary" data-type="single">Order Now</button>
+            </div>
           </div>
-          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
-            <h4 class="text-2xl font-semibold mb-4">Annual Subscription</h4>
-            <p class="text-4xl font-bold text-blue-600 mb-6">$9,499/year</p>
-            <form id="businessInfoForm-subscription" class="mb-4 text-left">
-              <div class="space-y-3">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700">Company Name</label>
-                  <input type="text" id="companyName-subscription" name="companyName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700">Contact Name</label>
-                  <input type="text" id="contactName-subscription" name="contactName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700">Phone Number</label>
-                  <input type="tel" id="phoneNumber-subscription" name="phoneNumber" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700">Business Email</label>
-                  <input type="email" id="businessEmail-subscription" name="businessEmail" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700">Facility Type</label>
-                  <select name="facilityType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required>
-                    <option value="">Select Facility Type</option>
-                    <option value="hospital">Hospital</option>
-                    <option value="imaging_center">Imaging Center</option>
-                    <option value="orthopedic">Orthopedic Clinic</option>
-                    <option value="pediatric">Pediatric Facility</option>
-                    <option value="other">Other Medical Facility</option>
-                  </select>
-                </div>
-              </div>
+          
+          <div class="card relative">
+            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <span class="bg-success text-white text-sm font-bold px-4 py-2 rounded-full">BEST VALUE</span>
+            </div>
+            <div class="card-header text-center mt-4">
+              <h4 class="text-2xl font-semibold mb-4">Annual Subscription</h4>
+              <p class="text-4xl font-bold text-primary mb-2">$9,499/year</p>
+              <p class="text-small text-success">Extra $500 savings!</p>
+            </div>
+            <div class="card-body">
+              <ul class="space-y-2 text-left">
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Guaranteed annual supply</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Priority shipping</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Dedicated support</span>
+                </li>
+              </ul>
+            </div>
+            <form id="businessInfoForm-subscription" class="hidden">
+              <input type="text" id="companyName-subscription" name="companyName" placeholder="Company">
+              <input type="text" id="contactName-subscription" name="contactName" placeholder="Contact">
+              <input type="tel" id="phoneNumber-subscription" name="phoneNumber" placeholder="Phone">
+              <input type="email" id="businessEmail-subscription" name="businessEmail" placeholder="Email">
+              <select name="facilityType"><option value="">Type</option><option value="hospital">Hospital</option><option value="imaging_center">Imaging Center</option><option value="orthopedic">Orthopedic</option><option value="pediatric">Pediatric</option><option value="other">Other</option></select>
             </form>
-            <button id="stripe-subscription" class="stripe-button bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 w-full" data-type="subscription">Subscribe with Stripe</button>
+            <button id="stripe-subscription" class="btn btn-primary" data-type="subscription">Purchase Now</button>
+          </div>
+          
+          <div class="premium-card bg-white rounded-lg shadow-2xl p-8 text-center border-2 border-purple-400 transform hover:scale-105 transition-transform">
+            <div class="bg-purple-600 text-white text-sm font-semibold px-3 py-1 rounded-full inline-block mb-4">CUSTOM PRICING</div>
+            <h4 class="text-2xl font-semibold mb-4">Request Quote</h4>
+            <p class="text-lg text-gray-600 mb-6">For bulk orders or<br>custom requirements</p>
+            <ul class="text-left text-sm text-gray-600 mb-6 space-y-2">
+              <li>✓ Volume discounts available</li>
+              <li>✓ Custom delivery schedules</li>
+              <li>✓ Installation & training included</li>
+              <li>✓ Dedicated account manager</li>
+            </ul>
+            <button onclick="openQuoteModal()" class="btn btn-primary">Request Quote</button>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="specialty-gases" class="py-16 bg-gray-50">
+    <section id="installation" class="py-16 bg-gradient-to-b from-white to-blue-50">
       <div class="container mx-auto px-4">
-        <h3 class="text-3xl font-bold mb-12 text-center">Our Specialty Gases</h3>
-        <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto text-center">Explore our wide range of specialty gases tailored for various applications. Whether you need high purity gases or specific gas mixtures, we have the right solution for you.</p>
-        <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
-          <li class="flex items-center space-x-2">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>Halocarbon 14</span>
-          </li>
-          <li class="flex items-center space-x-2">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>High Purity Argon</span>
-          </li>
-          <li class="flex items-center space-x-2">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>High Purity Helium</span>
-          </li>
-          <li class="flex items-center space-x-2">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>High Purity Nitrogen</span>
-          </li>
-          <li class="flex items-center space-x-2">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>High Purity Oxygen</span>
-          </li>
-          <li class="flex items-center space-x-2">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>Ethylene</span>
-          </li>
-          <li class="flex items-center space-x-2">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>Propane</span>
-          </li>
-          <li class="flex items-center space-x-2">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>Ammonia</span>
-          </li>
-        </ul>
+        <h3 class="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Professional Installation Services</h3>
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-white rounded-lg shadow-xl p-8 border-l-4 border-purple-600">
+            <div class="grid md:grid-cols-2 gap-8">
+              <div>
+                <h4 class="text-2xl font-semibold mb-4 text-gray-800">Installation Support Available</h4>
+                <p class="text-gray-700 mb-4">
+                  Our expert technicians can assist with installation and setup of your EOS 3.5 gas system. We understand the critical nature of your imaging equipment and provide professional support to ensure proper installation.
+                </p>
+                <ul class="space-y-2 text-gray-700">
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-2 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    On-site installation assistance
+                  </li>
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-2 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    System compatibility verification
+                  </li>
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-2 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    Staff training on proper handling
+                  </li>
+                </ul>
+              </div>
+              <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-6">
+                <h5 class="text-xl font-semibold mb-3 text-purple-800">Request Installation</h5>
+                <p class="text-gray-700 mb-4">
+                  Professional installation services are available upon request. Contact us to discuss your needs.
+                </p>
+                <div class="bg-white rounded-lg p-4 border border-purple-200">
+                  <p class="font-semibold text-purple-800 mb-2">📞 Call for Installation</p>
+                  <p class="text-gray-700">Include "Installation Request" when contacting us via the form below or when placing your order.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <section id="contact" class="py-16 bg-gray-50">
       <div class="container mx-auto px-4">
-        <h3 class="text-3xl font-bold mb-12 text-center">Contact Us / Request a Specialty Gas</h3>
+        <h3 class="text-4xl font-bold mb-12 text-center">Contact Us / Request a Quote</h3>
         
         <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
           <form action="https://formsubmit.co/smythmyke@gmail.com" method="POST" class="space-y-6" id="specialtyGasForm" onsubmit="gtag('event', 'conversion', {'send_to': 'AW-10943556560/gas_inquiry'});">
@@ -550,7 +1226,7 @@
               <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
               <textarea name="message" placeholder="Please include any specific questions or requirements" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[150px]" required></textarea>
             </div>
-            <button type="submit" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">
+            <button type="submit" class="btn btn-primary w-full">
               Send Inquiry
             </button>
           </form>
@@ -743,6 +1419,123 @@
       }
       
       console.log('Stripe checkout initialized');
+    });
+
+    // Dynamic stock counter
+    function updateStockCounter() {
+      const stockElement = document.getElementById('stock-counter');
+      if (stockElement) {
+        // Simulate stock changes (in production, this would fetch from a database)
+        const baseStock = 10;
+        const randomVariation = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+        const currentStock = Math.max(3, Math.min(10, baseStock + randomVariation));
+        stockElement.textContent = currentStock;
+        
+        // Update color based on stock level
+        const parentElement = stockElement.parentElement;
+        if (currentStock <= 3) {
+          parentElement.classList.remove('bg-green-500');
+          parentElement.classList.add('bg-red-500');
+        } else if (currentStock <= 6) {
+          parentElement.classList.remove('bg-green-500');
+          parentElement.classList.add('bg-yellow-500');
+        }
+      }
+    }
+
+    // Update stock every 30 seconds
+    setInterval(updateStockCounter, 30000);
+    
+    // Quote modal functionality
+    function openQuoteModal() {
+      // Create modal HTML
+      const modalHTML = `
+        <div id="quoteModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div class="bg-white rounded-lg max-w-md w-full p-8 relative">
+            <button onclick="closeQuoteModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+            <h3 class="text-2xl font-bold mb-4">Request Custom Quote</h3>
+            <form action="https://formsubmit.co/smythmyke@gmail.com" method="POST" class="space-y-4">
+              <input type="hidden" name="_subject" value="Custom Quote Request - Apex Image Gas">
+              <input type="hidden" name="_next" value="https://apeximagegas.net/success.html">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Company Name *</label>
+                <input type="text" name="companyName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" required>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Contact Name *</label>
+                <input type="text" name="contactName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" required>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                <input type="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" required>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+                <input type="tel" name="phone" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" required>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Quantity Needed</label>
+                <select name="quantity" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                  <option value="1-5">1-5 bottles</option>
+                  <option value="6-10">6-10 bottles</option>
+                  <option value="11-20">11-20 bottles</option>
+                  <option value="20+">20+ bottles</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
+                <textarea name="requirements" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" placeholder="Special requirements, delivery schedule, etc."></textarea>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" name="installation" value="yes" class="mr-2">
+                <label class="text-sm text-gray-700">I need installation services</label>
+              </div>
+              <button type="submit" class="btn btn-primary w-full">
+                Submit Quote Request
+              </button>
+            </form>
+          </div>
+        </div>
+      `;
+      
+      // Add modal to body
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+    
+    function closeQuoteModal() {
+      const modal = document.getElementById('quoteModal');
+      if (modal) {
+        modal.remove();
+      }
+    }
+  </script>
+  <!-- Mobile Sticky CTA Bar -->
+  <div class="mobile-cta-bar md:hidden">
+    <a href="tel:+1234567890" class="btn btn-secondary">Call</a>
+    <a href="#contact" class="btn btn-primary">Quote</a>
+    <a href="#pricing" class="btn btn-primary">Order</a>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Back to top">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+    </svg>
+  </button>
+
+  <script>
+    // Back to top visibility
+    window.addEventListener('scroll', () => {
+      const backToTop = document.querySelector('.back-to-top');
+      if (window.scrollY > 300) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
     });
   </script>
 </body>

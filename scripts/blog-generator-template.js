@@ -14,6 +14,10 @@ class ApexGasBlogGenerator {
   }
 
   async initialize() {
+    // DISABLED TO REDUCE GEMINI API COSTS
+    // To re-enable: Remove this throw statement
+    throw new Error('Gemini API is currently disabled to reduce costs. Remove this throw statement in initialize() to re-enable.');
+    
     if (this.initialized) return;
 
     console.log('🔧 Initializing blog generator...');

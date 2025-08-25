@@ -47,9 +47,14 @@ class AutomatedBlogPublisher {
   }
 
   /**
+   * DISABLED TO REDUCE GEMINI API COSTS
    * Load API keys from Firestore
    */
   async loadApiKeys() {
+    // DISABLED TO REDUCE GEMINI API COSTS
+    // To re-enable: Remove this throw statement
+    throw new Error('Gemini API is currently disabled to reduce costs. Remove this throw statement in loadApiKeys() to re-enable.');
+    
     if (this.apiKeysLoaded) return;
 
     try {
