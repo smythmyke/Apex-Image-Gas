@@ -5,10 +5,10 @@ const logger = require("firebase-functions/logger");
 const {Resend} = require("resend");
 const Stripe = require("stripe");
 
-// Directly initialize Resend with API key and email config
-const resendApiKey = "re_TtHd9i1M_6WbZZ2Bau61WcSGigYtDNjXo";
-const emailFrom = "noreply@apeximagegas.net";
-const emailNotification = "smythmyke@gmail.com";
+// Email configuration from environment variables
+const resendApiKey = process.env.EMAIL_APIKEY;
+const emailFrom = process.env.EMAIL_FROM || "noreply@apeximagegas.net";
+const emailNotification = process.env.EMAIL_NOTIFICATION || "smythmyke@gmail.com";
 
 const {defineString} = require("firebase-functions/params");
 const stripeSecretKey = defineString("STRIPE_SECRET_KEY");
