@@ -5,13 +5,12 @@ const logger = require("firebase-functions/logger");
 const {Resend} = require("resend");
 const Stripe = require("stripe");
 
-// Initialize Resend with API key from environment variables
-const {defineString} = require("firebase-functions/params");
+// Directly initialize Resend with API key and email config
+const resendApiKey = "re_TtHd9i1M_6WbZZ2Bau61WcSGigYtDNjXo";
+const emailFrom = "noreply@apeximagegas.net";
+const emailNotification = "smythmyke@gmail.com";
 
-// Define environment parameters
-const emailApiKey = defineString("EMAIL_APIKEY");
-const emailFrom = defineString("EMAIL_FROM");
-const emailNotification = defineString("EMAIL_NOTIFICATION");
+const {defineString} = require("firebase-functions/params");
 const stripeSecretKey = defineString("STRIPE_SECRET_KEY");
 const stripeWebhookSecret = defineString("STRIPE_WEBHOOK_SECRET");
 const stripePriceSingle = defineString("STRIPE_PRICE_SINGLE");
@@ -24,7 +23,7 @@ const adminPhoneNumber = defineString("ADMIN_PHONE_NUMBER");
 let resend;
 const initResend = () => {
   if (!resend) {
-    resend = new Resend(emailApiKey.value());
+    resend = new Resend(resendApiKey);
   }
   return resend;
 };
@@ -58,8 +57,8 @@ exports.onFormSubmission = onDocumentCreated({
   try {
     const resendClient = initResend();
     await resendClient.emails.send({
-      from: emailFrom.value(),
-      to: emailNotification.value(),
+      from: emailFrom,
+      to: emailNotification,
       subject: "New Form Submission - Apex Gas",
       text: `
         New form submission received:
@@ -111,39 +110,53 @@ exports.onPurchaseTracked = onDocumentCreated({
       "New Subscription Purchase - Apex Gas" :
       "New One-Time Purchase - Apex Gas";
 
+    // Format delivery address for email
+    const deliveryAddressText = `
+        ${purchaseData.deliveryAddress.street}
+        ${purchaseData.deliveryAddress.address2 ? purchaseData.deliveryAddress.address2 + "\n        " : ""}${purchaseData.deliveryAddress.city}, ${purchaseData.deliveryAddress.state} ${purchaseData.deliveryAddress.zip}
+        ${purchaseData.deliveryAddress.floor ? "Floor: " + purchaseData.deliveryAddress.floor + "\n        " : ""}${purchaseData.deliveryAddress.suite ? "Suite/Unit: " + purchaseData.deliveryAddress.suite + "\n        " : ""}${purchaseData.deliveryAddress.instructions ? "Delivery Instructions: " + purchaseData.deliveryAddress.instructions : ""}`;
+
     const text = purchaseData.type === "subscription" ?
       `
         New subscription purchase:
-        
+
         Email: ${purchaseData.email}
         Subscription ID: ${purchaseData.subscriptionId}
         Status: ${purchaseData.status}
         Plan ID: ${purchaseData.planId}
         Start Time: ${purchaseData.startTime}
-        
+
         Business Information:
         Company: ${purchaseData.businessInfo.companyName}
         Contact: ${purchaseData.businessInfo.contactName}
         Email: ${purchaseData.businessInfo.businessEmail}
         Phone: ${purchaseData.businessInfo.phoneNumber}
-        
+        Facility Type: ${purchaseData.businessInfo.facilityType}
+
+        Delivery Address:
+        ${deliveryAddressText}
+
         Purchase ID: ${event.data.id}
         Time: ${purchaseData.timestamp.toDate().toLocaleString()}
       ` :
       `
         New one-time purchase:
-        
+
         Email: ${purchaseData.email}
         Amount: ${purchaseData.amount} ${purchaseData.currency}
         Order ID: ${purchaseData.orderId}
         Status: ${purchaseData.status}
-        
+
         Business Information:
         Company: ${purchaseData.businessInfo.companyName}
         Contact: ${purchaseData.businessInfo.contactName}
         Email: ${purchaseData.businessInfo.businessEmail}
         Phone: ${purchaseData.businessInfo.phoneNumber}
-        
+        Facility Type: ${purchaseData.businessInfo.facilityType}
+
+        Delivery Address:
+        ${deliveryAddressText}
+
         Purchase ID: ${event.data.id}
         Time: ${purchaseData.timestamp.toDate().toLocaleString()}
       `;
@@ -151,13 +164,21 @@ exports.onPurchaseTracked = onDocumentCreated({
     // Send notification to admin
     const resendClient = initResend();
 
+    logger.info("Sending admin notification email", {
+      from: emailFrom,
+      to: emailNotification,
+      subject,
+    });
+
     // Send notification to admin
-    await resendClient.emails.send({
-      from: emailFrom.value(),
-      to: emailNotification.value(),
+    const adminEmailResult = await resendClient.emails.send({
+      from: emailFrom,
+      to: emailNotification,
       subject,
       text,
     });
+
+    logger.info("Admin email sent", {result: adminEmailResult});
 
     // Send receipt to customer
     const customerSubject = purchaseData.type === "subscription" ?
@@ -167,55 +188,70 @@ exports.onPurchaseTracked = onDocumentCreated({
     const customerText = purchaseData.type === "subscription" ?
       `
         Thank you for your Apex Gas subscription!
-        
+
         Subscription Details:
         - Status: ${purchaseData.status}
         - Start Time: ${purchaseData.startTime}
         - Subscription ID: ${purchaseData.subscriptionId}
-        
+
         Business Information:
         - Company: ${purchaseData.businessInfo.companyName}
         - Contact: ${purchaseData.businessInfo.contactName}
         - Email: ${purchaseData.businessInfo.businessEmail}
         - Phone: ${purchaseData.businessInfo.phoneNumber}
-        
-        Our team will contact you shortly to coordinate 
+        - Facility Type: ${purchaseData.businessInfo.facilityType}
+
+        Delivery Address:
+        ${deliveryAddressText}
+
+        Our team will contact you shortly to coordinate
         your first delivery.
-        
+
         If you have any questions, please don't hesitate to contact us.
-        
+
         Thank you for choosing Apex Gas!
       ` :
       `
         Thank you for your Apex Gas purchase!
-        
+
         Order Details:
         - Amount: ${purchaseData.amount} ${purchaseData.currency}
         - Order ID: ${purchaseData.orderId}
         - Status: ${purchaseData.status}
-        
+
         Business Information:
         - Company: ${purchaseData.businessInfo.companyName}
         - Contact: ${purchaseData.businessInfo.contactName}
         - Email: ${purchaseData.businessInfo.businessEmail}
         - Phone: ${purchaseData.businessInfo.phoneNumber}
-        
-        Our team will contact you shortly to coordinate 
+        - Facility Type: ${purchaseData.businessInfo.facilityType}
+
+        Delivery Address:
+        ${deliveryAddressText}
+
+        Our team will contact you shortly to coordinate
         your delivery.
-        
+
         If you have any questions, please don't hesitate to contact us.
-        
+
         Thank you for choosing Apex Gas!
       `;
 
+    logger.info("Sending customer receipt email", {
+      from: emailFrom,
+      to: purchaseData.email,
+      subject: customerSubject,
+    });
+
     // Send customer receipt
-    await resendClient.emails.send({
-      from: emailFrom.value(),
+    const customerEmailResult = await resendClient.emails.send({
+      from: emailFrom,
       to: purchaseData.email,
       subject: customerSubject,
       text: customerText,
     });
 
+    logger.info("Customer email sent", {result: customerEmailResult});
     logger.info("Purchase notification and customer receipt sent successfully");
 
     // Send SMS notification to admin
@@ -237,7 +273,11 @@ exports.onPurchaseTracked = onDocumentCreated({
       // Don't throw - SMS failure shouldn't break the purchase flow
     }
   } catch (error) {
-    logger.error("Error sending purchase notification", error);
+    logger.error("Error sending purchase notification", {
+      error: error.message,
+      stack: error.stack,
+      details: error,
+    });
   }
 },
 );
@@ -249,15 +289,41 @@ exports.generateBlogManually = generateBlogManually;
 
 // Stripe Checkout Session Creation
 exports.createCheckoutSession = onRequest({
-  cors: true,
+  cors: [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://apeximagegas.net",
+    "https://smythmyke.github.io",
+  ],
   memory: "256MiB",
   timeoutSeconds: 60,
 }, async (request, response) => {
   logger.info("createCheckoutSession called", {
     method: request.method,
-    headers: request.headers,
+    origin: request.headers.origin,
     body: request.body,
   });
+
+  // Handle CORS preflight
+  const origin = request.headers.origin;
+  const allowedOrigins = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://apeximagegas.net",
+    "https://smythmyke.github.io",
+  ];
+
+  if (allowedOrigins.includes(origin)) {
+    response.set("Access-Control-Allow-Origin", origin);
+    response.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    response.set("Access-Control-Allow-Headers", "Content-Type");
+    response.set("Access-Control-Max-Age", "3600");
+  }
+
+  if (request.method === "OPTIONS") {
+    response.status(204).send("");
+    return;
+  }
 
   // Firebase callable functions wrap data in a 'data' property
   const requestData = request.body.data || request.body;
@@ -301,6 +367,15 @@ exports.createCheckoutSession = onRequest({
         contactName: businessInfo.contactName,
         businessEmail: businessInfo.businessEmail,
         phoneNumber: businessInfo.phoneNumber,
+        facilityType: businessInfo.facilityType || "",
+        deliveryStreet: (businessInfo.deliveryAddress && businessInfo.deliveryAddress.street) || "",
+        deliveryAddress2: (businessInfo.deliveryAddress && businessInfo.deliveryAddress.address2) || "",
+        deliveryCity: (businessInfo.deliveryAddress && businessInfo.deliveryAddress.city) || "",
+        deliveryState: (businessInfo.deliveryAddress && businessInfo.deliveryAddress.state) || "",
+        deliveryZip: (businessInfo.deliveryAddress && businessInfo.deliveryAddress.zip) || "",
+        deliveryFloor: (businessInfo.deliveryAddress && businessInfo.deliveryAddress.floor) || "",
+        deliverySuite: (businessInfo.deliveryAddress && businessInfo.deliveryAddress.suite) || "",
+        deliveryInstructions: (businessInfo.deliveryAddress && businessInfo.deliveryAddress.instructions) || "",
       },
       customer_email: businessInfo.businessEmail,
     };
@@ -380,6 +455,17 @@ exports.stripeWebhook = onRequest({
             contactName: session.metadata.contactName,
             businessEmail: session.metadata.businessEmail,
             phoneNumber: session.metadata.phoneNumber,
+            facilityType: session.metadata.facilityType,
+          },
+          deliveryAddress: {
+            street: session.metadata.deliveryStreet,
+            address2: session.metadata.deliveryAddress2,
+            city: session.metadata.deliveryCity,
+            state: session.metadata.deliveryState,
+            zip: session.metadata.deliveryZip,
+            floor: session.metadata.deliveryFloor,
+            suite: session.metadata.deliverySuite,
+            instructions: session.metadata.deliveryInstructions,
           },
           timestamp: admin.firestore.FieldValue.serverTimestamp(),
         };

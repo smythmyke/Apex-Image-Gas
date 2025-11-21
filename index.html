@@ -167,36 +167,39 @@
     
     /* Card Component */
     .card {
-      padding: 2rem;
+      padding: 2.5rem 2rem 2rem 2rem;
+      margin-top: 2.5rem;
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-md);
-      transition: all 0.2s ease;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
       min-height: 480px;
     }
-    
+
     .card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16), 0 4px 12px rgba(0, 0, 0, 0.1);
     }
-    
+
     .card-header {
       margin-bottom: 1.5rem;
+      margin-top: 2rem;
       padding-bottom: 1rem;
     }
-    
+
     .card-body {
       flex-grow: 1;
       margin-bottom: 1.5rem;
       padding: 0 0.5rem;
     }
-    
+
     .card-footer {
       margin-top: auto;
       padding-top: 1rem;
+      padding-bottom: 0.5rem;
     }
     
     /* Standardized Button Component */
@@ -306,13 +309,31 @@
     
     /* Hero Section - Keep gradient but ensure text contrast */
     #hero {
-      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%) !important;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 58, 138, 0.95) 100%),
+                  url('https://images.unsplash.com/photo-1516549655169-df83a0774514?w=1600&auto=format&fit=crop&q=80') center/cover !important;
       min-height: 600px;
+      position: relative;
     }
-    
+
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 58, 138, 0.85) 100%);
+      z-index: 1;
+    }
+
+    #hero .container {
+      position: relative;
+      z-index: 2;
+    }
+
     #hero h2, #hero p, #hero span {
       color: white !important;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
     }
     
     /* Section backgrounds */
@@ -941,7 +962,7 @@
         <p class="text-center text-gray-100 mb-12 text-lg font-medium">Free shipping included on all orders • Installation services available</p>
 
         <div class="mb-16">
-          <div class="bg-white rounded-xl shadow-2xl p-8 max-w-2xl mx-auto border-2 border-purple-300">
+          <div class="bg-white rounded-xl shadow-2xl p-8 max-w-2xl mx-auto border-2 border-purple-300" style="box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(139, 92, 246, 0.1);">
             <h4 class="text-2xl font-semibold mb-6 text-gray-900">White Glove Delivery Process</h4>
             <p class="mb-6 text-gray-700 font-medium">For your security and convenience:</p>
             <ol class="process-list">
@@ -974,9 +995,9 @@
 
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto" style="padding-top: 2rem;">
           <div class="card relative">
-            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+            <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
               <span class="bg-blue-600 text-white text-sm font-bold px-4 py-2 rounded-full">MOST POPULAR</span>
             </div>
             <div class="card-header text-center mt-4">
@@ -1010,9 +1031,9 @@
               <button id="stripe-single" class="btn btn-primary btn-block" data-type="single" style="border-radius: 12px;">Order Now</button>
             </div>
           </div>
-          
+
           <div class="card relative">
-            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+            <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
               <span class="bg-green-600 text-white text-sm font-bold px-4 py-2 rounded-full">BEST VALUE</span>
             </div>
             <div class="card-header text-center mt-4">
@@ -1043,19 +1064,12 @@
               </ul>
             </div>
             <div class="card-footer text-center">
-              <form id="businessInfoForm-subscription" class="hidden">
-                <input type="text" id="companyName-subscription" name="companyName" placeholder="Company">
-                <input type="text" id="contactName-subscription" name="contactName" placeholder="Contact">
-                <input type="tel" id="phoneNumber-subscription" name="phoneNumber" placeholder="Phone">
-                <input type="email" id="businessEmail-subscription" name="businessEmail" placeholder="Email">
-                <select name="facilityType"><option value="">Type</option><option value="hospital">Hospital</option><option value="imaging_center">Imaging Center</option><option value="orthopedic">Orthopedic</option><option value="pediatric">Pediatric</option><option value="other">Other</option></select>
-              </form>
               <button id="stripe-subscription" class="btn btn-primary btn-block" data-type="subscription" style="border-radius: 12px;">Order Now</button>
             </div>
           </div>
           
           <div class="card relative">
-            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+            <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
               <span class="bg-orange-600 text-white text-sm font-bold px-4 py-2 rounded-full">CUSTOM PRICING</span>
             </div>
             <div class="card-header text-center mt-4">
@@ -1243,9 +1257,221 @@
     </div>
   </footer>
 
+  <style>
+    /* Modal styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .modal-header {
+      margin-bottom: 1.5rem;
+      padding-right: 2rem;
+    }
+
+    .modal-header h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .modal-form .field {
+      margin-bottom: 1rem;
+    }
+
+    .modal-form label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .modal-form input,
+    .modal-form select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .modal-form input:focus,
+    .modal-form select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+
+  <!-- Business Info Modal -->
+  <div id="businessInfoModal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeBusinessModal()" aria-label="Close modal">&times;</button>
+      <div class="modal-header">
+        <h3>Business Information</h3>
+        <p>Please provide your business details to continue with checkout</p>
+      </div>
+      <form id="businessInfoForm" class="modal-form">
+        <!-- Business Information Section -->
+        <div style="margin-bottom: 24px;">
+          <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; color: #1e40af;">Business Information</h4>
+          <div class="field">
+            <label for="modal-companyName">Company Name *</label>
+            <input type="text" id="modal-companyName" name="companyName" required>
+          </div>
+          <div class="field">
+            <label for="modal-contactName">Contact Name *</label>
+            <input type="text" id="modal-contactName" name="contactName" required>
+          </div>
+          <div class="field">
+            <label for="modal-phoneNumber">Phone Number *</label>
+            <input type="tel" id="modal-phoneNumber" name="phoneNumber" required>
+          </div>
+          <div class="field">
+            <label for="modal-businessEmail">Business Email *</label>
+            <input type="email" id="modal-businessEmail" name="businessEmail" required>
+          </div>
+          <div class="field">
+            <label for="modal-facilityType">Facility Type *</label>
+            <select id="modal-facilityType" name="facilityType" required>
+              <option value="">Select Facility Type</option>
+              <option value="hospital">Hospital</option>
+              <option value="imaging_center">Imaging Center</option>
+              <option value="orthopedic">Orthopedic Clinic</option>
+              <option value="pediatric">Pediatric Facility</option>
+              <option value="other">Other Medical Facility</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Delivery Address Section -->
+        <div style="margin-bottom: 24px; padding-top: 24px; border-top: 2px solid #e5e7eb;">
+          <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; color: #1e40af;">Delivery Address</h4>
+          <div class="field">
+            <label for="modal-deliveryStreet">Street Address *</label>
+            <input type="text" id="modal-deliveryStreet" name="deliveryStreet" required>
+          </div>
+          <div class="field">
+            <label for="modal-deliveryAddress2">Address Line 2 (Apt, Suite, etc.)</label>
+            <input type="text" id="modal-deliveryAddress2" name="deliveryAddress2">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+            <div class="field">
+              <label for="modal-deliveryCity">City *</label>
+              <input type="text" id="modal-deliveryCity" name="deliveryCity" required>
+            </div>
+            <div class="field">
+              <label for="modal-deliveryState">State *</label>
+              <select id="modal-deliveryState" name="deliveryState" required>
+                <option value="">State</option>
+                <option value="AL">AL</option><option value="AK">AK</option><option value="AZ">AZ</option><option value="AR">AR</option>
+                <option value="CA">CA</option><option value="CO">CO</option><option value="CT">CT</option><option value="DE">DE</option>
+                <option value="FL">FL</option><option value="GA">GA</option><option value="HI">HI</option><option value="ID">ID</option>
+                <option value="IL">IL</option><option value="IN">IN</option><option value="IA">IA</option><option value="KS">KS</option>
+                <option value="KY">KY</option><option value="LA">LA</option><option value="ME">ME</option><option value="MD">MD</option>
+                <option value="MA">MA</option><option value="MI">MI</option><option value="MN">MN</option><option value="MS">MS</option>
+                <option value="MO">MO</option><option value="MT">MT</option><option value="NE">NE</option><option value="NV">NV</option>
+                <option value="NH">NH</option><option value="NJ">NJ</option><option value="NM">NM</option><option value="NY">NY</option>
+                <option value="NC">NC</option><option value="ND">ND</option><option value="OH">OH</option><option value="OK">OK</option>
+                <option value="OR">OR</option><option value="PA">PA</option><option value="RI">RI</option><option value="SC">SC</option>
+                <option value="SD">SD</option><option value="TN">TN</option><option value="TX">TX</option><option value="UT">UT</option>
+                <option value="VT">VT</option><option value="VA">VA</option><option value="WA">WA</option><option value="WV">WV</option>
+                <option value="WI">WI</option><option value="WY">WY</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="modal-deliveryZip">ZIP Code *</label>
+              <input type="text" id="modal-deliveryZip" name="deliveryZip" required pattern="[0-9]{5}">
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="field">
+              <label for="modal-floor">Floor Number</label>
+              <input type="text" id="modal-floor" name="floor" placeholder="e.g., 3rd Floor">
+            </div>
+            <div class="field">
+              <label for="modal-suite">Suite/Unit Number</label>
+              <input type="text" id="modal-suite" name="suite" placeholder="e.g., Suite 200">
+            </div>
+          </div>
+          <div class="field">
+            <label for="modal-deliveryInstructions">Delivery Instructions</label>
+            <textarea id="modal-deliveryInstructions" name="deliveryInstructions" rows="3" placeholder="e.g., Use loading dock entrance, Call upon arrival, Security code required" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-family: inherit;"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" onclick="closeBusinessModal()" class="btn btn-secondary" style="flex: 1;">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="flex: 2;">Continue to Checkout</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     // Stripe will be initialized via app.js
-    console.log('Payment system initializing...');
+    console.log('[INIT] Payment system initializing...');
   </script>
   <!-- Firebase SDK -->
   <script type="module">
@@ -1283,108 +1509,254 @@
   <!-- App initialization with Stripe -->
   <script>
     // Initialize Stripe with public key
+    console.log('[STRIPE] Initializing Stripe...');
     const stripe = Stripe('pk_test_51RzJ5hD2Q6x28Ei7uvNC13aDDSHDDpMIUrc6BXqt48APu3OtoW7dMCXDBa5bju03zkFGxjXh4vNRYHniOjWVz8j700aVqsnwaL');
-    
-    // Function to handle checkout
-    async function handleStripeCheckout(priceType) {
-      const businessInfo = getBusinessInfo(priceType === 'subscription' ? 'stripe-subscription' : 'stripe-single');
-      
-      if (!businessInfo) {
-        return;
+    console.log('[STRIPE] Stripe initialized successfully');
+
+    // Store the current checkout type globally
+    let currentCheckoutType = null;
+
+    // Modal functions
+    function openBusinessModal(checkoutType) {
+      console.log('[MODAL] Opening business info modal for type:', checkoutType);
+      currentCheckoutType = checkoutType;
+      const modal = document.getElementById('businessInfoModal');
+      if (modal) {
+        modal.classList.add('active');
+        console.log('[MODAL] Modal displayed');
+      } else {
+        console.error('[MODAL] Modal element not found!');
       }
-      
+    }
+
+    function closeBusinessModal() {
+      console.log('[MODAL] Closing business info modal');
+      const modal = document.getElementById('businessInfoModal');
+      if (modal) {
+        modal.classList.remove('active');
+        // Reset form
+        document.getElementById('businessInfoForm').reset();
+        currentCheckoutType = null;
+        console.log('[MODAL] Modal closed and form reset');
+      }
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('click', (e) => {
+      const modal = document.getElementById('businessInfoModal');
+      if (e.target === modal) {
+        console.log('[MODAL] Closing modal via outside click');
+        closeBusinessModal();
+      }
+    });
+
+    // Function to handle checkout
+    async function handleStripeCheckout(priceType, businessInfo) {
+      console.log('[CHECKOUT] Starting checkout process');
+      console.log('[CHECKOUT] Price Type:', priceType);
+      console.log('[CHECKOUT] Business Info:', { ...businessInfo, businessEmail: '***@***' }); // Log redacted email
+
       showTransactionMessage('Redirecting to secure checkout...', false);
-      
+
       try {
+        console.log('[CHECKOUT] Checking Firebase functions availability...');
+        if (!window.functions) {
+          throw new Error('Firebase functions not initialized');
+        }
+
+        console.log('[CHECKOUT] Calling createCheckoutSession function...');
         const createCheckoutSession = window.httpsCallable(window.functions, 'createCheckoutSession');
-        const { data } = await createCheckoutSession({
+
+        const checkoutData = {
           priceType: priceType,
           businessInfo: businessInfo,
-          successUrl: 'https://apeximagegas.net/success.html',
-          cancelUrl: 'https://apeximagegas.net/cancel.html'
-        });
-        
+          successUrl: window.location.origin + '/success.html',
+          cancelUrl: window.location.origin + '/cancel.html'
+        };
+        console.log('[CHECKOUT] Checkout data:', checkoutData);
+
+        const { data } = await createCheckoutSession(checkoutData);
+        console.log('[CHECKOUT] Received response from Firebase function:', data);
+
         if (data.url) {
+          console.log('[CHECKOUT] Redirecting to Stripe URL:', data.url);
           window.location.href = data.url;
         } else if (data.sessionId) {
+          console.log('[CHECKOUT] Redirecting to Stripe with session ID:', data.sessionId);
           const { error } = await stripe.redirectToCheckout({
             sessionId: data.sessionId
           });
-          
+
           if (error) {
-            console.error('Stripe redirect error:', error);
+            console.error('[CHECKOUT] Stripe redirect error:', error);
             showTransactionMessage('Error redirecting to checkout. Please try again.', true);
           }
+        } else {
+          console.error('[CHECKOUT] No URL or sessionId in response:', data);
+          showTransactionMessage('Invalid response from server. Please try again.', true);
         }
       } catch (error) {
-        console.error('Checkout error:', error);
+        console.error('[CHECKOUT] Checkout error:', error);
+        console.error('[CHECKOUT] Error details:', {
+          message: error.message,
+          code: error.code,
+          details: error.details
+        });
         showTransactionMessage('Error creating checkout session. Please try again.', true);
       }
     }
-    
+
     // Helper functions
-    function getBusinessInfo(buttonId) {
-      const formSuffix = buttonId.includes('subscription') ? '-subscription' : '';
-      
-      const companyName = document.getElementById('companyName' + formSuffix)?.value || '';
-      const contactName = document.getElementById('contactName' + formSuffix)?.value || '';
-      const phoneNumber = document.getElementById('phoneNumber' + formSuffix)?.value || '';
-      const businessEmail = document.getElementById('businessEmail' + formSuffix)?.value || '';
-      
+    function getBusinessInfoFromModal() {
+      console.log('[FORM] Extracting business info from modal form');
+
+      const companyName = document.getElementById('modal-companyName')?.value || '';
+      const contactName = document.getElementById('modal-contactName')?.value || '';
+      const phoneNumber = document.getElementById('modal-phoneNumber')?.value || '';
+      const businessEmail = document.getElementById('modal-businessEmail')?.value || '';
+      const facilityType = document.getElementById('modal-facilityType')?.value || '';
+
+      // Delivery address fields
+      const deliveryStreet = document.getElementById('modal-deliveryStreet')?.value || '';
+      const deliveryAddress2 = document.getElementById('modal-deliveryAddress2')?.value || '';
+      const deliveryCity = document.getElementById('modal-deliveryCity')?.value || '';
+      const deliveryState = document.getElementById('modal-deliveryState')?.value || '';
+      const deliveryZip = document.getElementById('modal-deliveryZip')?.value || '';
+      const floor = document.getElementById('modal-floor')?.value || '';
+      const suite = document.getElementById('modal-suite')?.value || '';
+      const deliveryInstructions = document.getElementById('modal-deliveryInstructions')?.value || '';
+
+      console.log('[FORM] Field values:', {
+        companyName: companyName ? 'provided' : 'missing',
+        contactName: contactName ? 'provided' : 'missing',
+        phoneNumber: phoneNumber ? 'provided' : 'missing',
+        businessEmail: businessEmail ? 'provided' : 'missing',
+        facilityType: facilityType ? 'provided' : 'missing',
+        deliveryStreet: deliveryStreet ? 'provided' : 'missing',
+        deliveryCity: deliveryCity ? 'provided' : 'missing',
+        deliveryState: deliveryState ? 'provided' : 'missing',
+        deliveryZip: deliveryZip ? 'provided' : 'missing'
+      });
+
       if (!companyName || !contactName || !phoneNumber || !businessEmail) {
+        console.error('[FORM] Validation failed: Missing required business fields');
         showTransactionMessage('Please fill in all required business information.', true);
         return null;
       }
-      
+
+      if (!deliveryStreet || !deliveryCity || !deliveryState || !deliveryZip) {
+        console.error('[FORM] Validation failed: Missing required delivery address fields');
+        showTransactionMessage('Please fill in all required delivery address fields.', true);
+        return null;
+      }
+
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(businessEmail)) {
+        console.error('[FORM] Validation failed: Invalid email format');
         showTransactionMessage('Please enter a valid email address.', true);
         return null;
       }
-      
+
+      console.log('[FORM] Validation passed');
       return {
         companyName,
         contactName,
         phoneNumber,
-        businessEmail
+        businessEmail,
+        facilityType,
+        deliveryAddress: {
+          street: deliveryStreet,
+          address2: deliveryAddress2,
+          city: deliveryCity,
+          state: deliveryState,
+          zip: deliveryZip,
+          floor: floor,
+          suite: suite,
+          instructions: deliveryInstructions
+        }
       };
     }
-    
+
     function showTransactionMessage(message, isError = false) {
+      console.log('[UI] Showing message:', message, 'isError:', isError);
       const existingMsg = document.querySelector('.transaction-message');
       if (existingMsg) {
         existingMsg.remove();
       }
-      
+
       const msgElement = document.createElement('div');
       msgElement.className = 'transaction-message ' + (isError ? 'error' : 'success');
       msgElement.textContent = message;
-      msgElement.style.cssText = 'padding: 1rem; margin: 1rem; border-radius: 0.5rem; text-align: center; ' + 
+      msgElement.style.cssText = 'padding: 1rem; margin: 1rem; border-radius: 0.5rem; text-align: center; ' +
         (isError ? 'background: #fee; color: #c00;' : 'background: #efe; color: #060;');
-      
+
       const pricing = document.querySelector('#pricing');
       if (pricing) {
         pricing.insertBefore(msgElement, pricing.firstChild);
       }
-      
+
       setTimeout(() => msgElement.remove(), 15000);
     }
-    
+
     // Wait for page load then attach button handlers
     window.addEventListener('DOMContentLoaded', () => {
+      console.log('[INIT] DOM Content Loaded - attaching event handlers');
+
       // Single purchase button
       const singleButton = document.getElementById('stripe-single');
       if (singleButton) {
-        singleButton.addEventListener('click', () => handleStripeCheckout('single'));
+        console.log('[INIT] Single purchase button found');
+        singleButton.addEventListener('click', () => {
+          console.log('[BUTTON] Single purchase button clicked');
+          openBusinessModal('single');
+        });
+      } else {
+        console.error('[INIT] Single purchase button NOT found!');
       }
-      
+
       // Subscription button
       const subButton = document.getElementById('stripe-subscription');
       if (subButton) {
-        subButton.addEventListener('click', () => handleStripeCheckout('subscription'));
+        console.log('[INIT] Subscription button found');
+        subButton.addEventListener('click', () => {
+          console.log('[BUTTON] Subscription button clicked');
+          openBusinessModal('subscription');
+        });
+      } else {
+        console.error('[INIT] Subscription button NOT found!');
       }
-      
-      console.log('Stripe checkout initialized');
+
+      // Business info form submit
+      const businessForm = document.getElementById('businessInfoForm');
+      if (businessForm) {
+        console.log('[INIT] Business info form found');
+        businessForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          console.log('[FORM] Form submitted');
+          console.log('[FORM] Current checkout type:', currentCheckoutType);
+
+          const businessInfo = getBusinessInfoFromModal();
+          if (businessInfo && currentCheckoutType) {
+            console.log('[FORM] Business info valid, proceeding to checkout');
+            // Store the checkout type before closing modal
+            const checkoutType = currentCheckoutType;
+            closeBusinessModal();
+            handleStripeCheckout(checkoutType, businessInfo);
+          } else {
+            console.error('[FORM] Form validation failed or no checkout type set');
+            if (!businessInfo) {
+              console.error('[FORM] Missing business info');
+            }
+            if (!currentCheckoutType) {
+              console.error('[FORM] Missing checkout type');
+            }
+          }
+        });
+      } else {
+        console.error('[INIT] Business info form NOT found!');
+      }
+
+      console.log('[INIT] Stripe checkout system initialized');
     });
 
     // Dynamic stock counter

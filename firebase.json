@@ -6,12 +6,16 @@
       "**/.*",
       "**/node_modules/**",
       "functions/**",
+      "scripts/**",
       "*.ps1",
       "*.sh",
       "*.md",
       "setup-*.ps1",
       "fix-*.ps1",
-      "manual-*.ps1"
+      "manual-*.ps1",
+      "test-sms.js",
+      "check-twilio.js",
+      "*.exe"
     ]
   },
   "functions": [
