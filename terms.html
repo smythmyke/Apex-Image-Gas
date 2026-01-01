@@ -3,35 +3,350 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terms of Service - Apex Gas</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Terms of Service - Apex Image Gas</title>
+  <link rel="icon" type="image/x-icon" href="images/apex_logo.png">
+  <link href="output.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --text: #0A0A0A;
+      --muted: #5A5F6A;
+      --primary: #0F766E;
+      --border: #E5E7EB;
+      --surface: #F8FAFC;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.75;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 16px;
+    }
+
+    .container { max-width: 800px; padding: 0 16px; margin: 0 auto; }
+
+    h1 { font-size: 2.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+    h2 { font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; }
+    h3 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+    p { margin-bottom: 1rem; }
+    ul, ol { margin: 0 0 1rem 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+
+    .header {
+      background: #1e293b;
+      color: white;
+      padding: 1rem 0;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .header a { color: white; text-decoration: none; }
+    .header a:hover { text-decoration: underline; }
+
+    .last-updated {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .important-box {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .footer {
+      background: #1e293b;
+      color: #94a3b8;
+      padding: 2rem 0;
+      margin-top: 3rem;
+    }
+
+    .footer a { color: #60a5fa; }
+
+    a { color: #2563eb; }
+    a:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Apex Gas</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-      </ul>
-    </nav>
+  <header class="header">
+    <div class="header-content">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <img src="images/apex_logo.png" alt="Apex Image Gas" height="40" width="40">
+        <span style="font-size: 1.25rem; font-weight: bold;">APEX Image Gas</span>
+      </div>
+      <nav>
+        <a href="index.html">Back to Home</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <section>
-      <h2>Terms of Service</h2>
-      <h3>1. Introduction</h3>
-      <p>Welcome to Apex Gas. These terms govern your use of our website and services...</p>
-      
-      <h3>2. Purchases</h3>
-      <p>All purchases are final and non-refundable...</p>
-      
-      <h3>3. Product Use</h3>
-      <p>Our gas bottles are intended for use with EOS 3.5 X-Ray machines only...</p>
-    </section>
+  <main class="container" style="padding: 2rem 16px;">
+    <h1>Terms of Service</h1>
+    <p class="last-updated">Last Updated: January 2025</p>
+
+    <p>
+      Welcome to Apex Image Gas. These Terms of Service ("Terms") govern your access to and use of our
+      website and the purchase of products from Apex Image Gas ("we," "us," or "our"). By accessing our
+      website or purchasing our products, you agree to be bound by these Terms.
+    </p>
+
+    <div class="important-box">
+      <strong>Please Read Carefully:</strong> These Terms contain important information about limitations
+      of liability, disclaimers, and your acknowledgment of product risks. By purchasing our products,
+      you confirm that you have read and understood these Terms.
+    </div>
+
+    <h2>1. Independent Supplier Disclaimer</h2>
+    <p>
+      <strong>Apex Image Gas is an independent supplier of compatible gas mixtures.</strong> We are not
+      affiliated with, endorsed by, authorized by, or in any way officially connected with EOS Imaging,
+      Alphatec Holdings, or any of their subsidiaries or affiliates.
+    </p>
+    <p>
+      "EOS" and related trademarks are the property of their respective owners and are used solely for
+      the purpose of identifying product compatibility. Our products are manufactured to be compatible
+      with EOS 3.5 X-Ray imaging systems based on publicly available specifications.
+    </p>
+    <p>
+      The use of our products may affect any existing warranty or service agreement you have with the
+      original equipment manufacturer. We recommend reviewing your service contracts before purchasing.
+    </p>
+
+    <h2>2. Product Description and Use</h2>
+    <p>
+      Our products are specialized gas mixtures (Xenon/Ethane) designed for use in EOS 3.5 X-Ray imaging
+      systems. These products are:
+    </p>
+    <ul>
+      <li>Intended for use only in compatible medical imaging equipment</li>
+      <li>High-pressure compressed gas requiring proper handling procedures</li>
+      <li>To be installed only by qualified biomedical technicians or trained personnel</li>
+      <li>Subject to all applicable federal, state, and local regulations for compressed gases</li>
+    </ul>
+
+    <h3>Intended Users</h3>
+    <p>
+      Our products are sold exclusively to healthcare facilities, medical imaging centers, hospitals,
+      and qualified distributors. By purchasing, you represent that you are authorized to purchase
+      medical/industrial compressed gases on behalf of a qualified facility.
+    </p>
+
+    <h2>3. Safety Acknowledgment</h2>
+    <p>
+      By purchasing our products, you acknowledge and agree that:
+    </p>
+    <ul>
+      <li>You have read and understood our <a href="safety.html">Safety & Handling Guidelines</a></li>
+      <li>The product will only be handled by qualified personnel trained in compressed gas safety</li>
+      <li>Installation will be performed by qualified biomedical technicians</li>
+      <li>You will maintain proper storage conditions as specified in our safety documentation</li>
+      <li>You accept responsibility for ensuring proper ventilation and safety measures at your facility</li>
+      <li>You will follow all manufacturer guidelines for the imaging equipment</li>
+    </ul>
+
+    <div class="important-box">
+      <strong>Hazard Warning:</strong> This product contains compressed gas under high pressure. Xenon
+      may displace oxygen in enclosed spaces, creating an asphyxiation hazard. Ethane is flammable.
+      Improper handling can result in serious injury or death. See our complete
+      <a href="safety.html">Safety & Handling Guidelines</a> for detailed safety information.
+    </div>
+
+    <h2>4. Orders and Payment</h2>
+
+    <h3>Order Acceptance</h3>
+    <p>
+      All orders are subject to acceptance by Apex Image Gas. We reserve the right to refuse or cancel
+      any order for any reason, including but not limited to product availability, errors in pricing or
+      product information, or concerns about order legitimacy.
+    </p>
+
+    <h3>Pricing</h3>
+    <p>
+      All prices are quoted in US Dollars and are subject to change without notice. The price charged
+      will be the price in effect at the time of order placement. Shipping is included for orders
+      within the continental United States unless otherwise specified.
+    </p>
+
+    <h3>Payment</h3>
+    <p>
+      Payment is processed securely through Stripe. We accept major credit cards and other payment
+      methods as displayed at checkout. Full payment is required before shipment.
+    </p>
+
+    <h2>5. Shipping and Delivery</h2>
+    <p>
+      Products are shipped in compliance with DOT regulations for compressed gases. Delivery times are
+      estimates and are not guaranteed. We are not responsible for delays caused by carriers, weather,
+      or circumstances beyond our control.
+    </p>
+    <p>
+      Upon delivery, you are responsible for inspecting the product for damage. Any shipping damage
+      must be reported to the carrier and to us within 48 hours of delivery.
+    </p>
+
+    <h2>6. Returns and Refunds</h2>
+    <p>
+      Due to the nature of compressed gas products and safety regulations:
+    </p>
+    <ul>
+      <li><strong>Unopened/Unused Products:</strong> May be returned within 30 days of delivery for a
+        refund, less shipping and restocking fees. Product must be in original, undamaged condition.</li>
+      <li><strong>Opened/Used Products:</strong> Cannot be returned due to safety and quality control
+        requirements.</li>
+      <li><strong>Damaged Products:</strong> Report damage within 48 hours of delivery. We will arrange
+        for replacement or refund at our discretion.</li>
+      <li><strong>Defective Products:</strong> Contact us immediately if you believe a product is
+        defective. We will investigate and provide remedy as appropriate.</li>
+    </ul>
+    <p>
+      To initiate a return, contact us through our website with your order information.
+    </p>
+
+    <h2>7. Warranty Disclaimer</h2>
+    <p>
+      <strong>OUR PRODUCTS ARE PROVIDED "AS IS" AND "AS AVAILABLE."</strong> To the fullest extent
+      permitted by applicable law, we disclaim all warranties, express or implied, including but not
+      limited to:
+    </p>
+    <ul>
+      <li>Implied warranties of merchantability and fitness for a particular purpose</li>
+      <li>Warranties regarding compatibility with your specific equipment configuration</li>
+      <li>Warranties that products will meet your specific requirements or expectations</li>
+      <li>Warranties regarding uninterrupted or error-free performance</li>
+    </ul>
+    <p>
+      We warrant only that products conform to their stated specifications at the time of shipment.
+      This warranty does not cover damage resulting from mishandling, improper storage, improper
+      installation, or use contrary to our guidelines.
+    </p>
+
+    <h2>8. Limitation of Liability</h2>
+    <p>
+      <strong>TO THE MAXIMUM EXTENT PERMITTED BY LAW:</strong>
+    </p>
+    <ul>
+      <li>Apex Image Gas shall not be liable for any indirect, incidental, special, consequential, or
+        punitive damages arising from the use or inability to use our products.</li>
+      <li>Our total liability for any claim arising from or related to our products shall not exceed
+        the amount paid for the specific product giving rise to the claim.</li>
+      <li>We are not liable for any damages resulting from:
+        <ul>
+          <li>Improper handling, storage, or installation</li>
+          <li>Use by unqualified personnel</li>
+          <li>Failure to follow safety guidelines</li>
+          <li>Use with incompatible equipment</li>
+          <li>Equipment downtime or business interruption</li>
+          <li>Any third-party claims</li>
+        </ul>
+      </li>
+    </ul>
+    <p>
+      Some jurisdictions do not allow the exclusion of certain warranties or limitations on liability,
+      so some of the above limitations may not apply to you.
+    </p>
+
+    <h2>9. Indemnification</h2>
+    <p>
+      You agree to indemnify, defend, and hold harmless Apex Image Gas, its officers, directors,
+      employees, agents, and affiliates from and against any claims, liabilities, damages, losses,
+      costs, or expenses (including reasonable attorneys' fees) arising from:
+    </p>
+    <ul>
+      <li>Your use of our products</li>
+      <li>Your violation of these Terms</li>
+      <li>Your violation of any applicable laws or regulations</li>
+      <li>Any claim that your use of our products caused damage to a third party</li>
+    </ul>
+
+    <h2>10. Compliance with Laws</h2>
+    <p>
+      You are responsible for compliance with all applicable federal, state, and local laws and
+      regulations regarding the purchase, storage, handling, and use of compressed gases, including
+      but not limited to:
+    </p>
+    <ul>
+      <li>OSHA regulations for compressed gas safety</li>
+      <li>DOT regulations for transportation</li>
+      <li>State and local fire codes</li>
+      <li>Facility-specific safety requirements</li>
+      <li>Any applicable medical device regulations</li>
+    </ul>
+
+    <h2>11. Intellectual Property</h2>
+    <p>
+      All content on our website, including text, graphics, logos, and images, is the property of
+      Apex Image Gas or its content suppliers and is protected by intellectual property laws.
+      "EOS" and related marks are trademarks of their respective owners.
+    </p>
+
+    <h2>12. Privacy</h2>
+    <p>
+      Your privacy is important to us. Please review our <a href="privacy.html">Privacy Policy</a>,
+      which explains how we collect, use, and protect your information.
+    </p>
+
+    <h2>13. Modifications to Terms</h2>
+    <p>
+      We reserve the right to modify these Terms at any time. Changes will be effective immediately
+      upon posting to our website. Your continued use of our website or purchase of products after
+      changes are posted constitutes acceptance of the modified Terms.
+    </p>
+
+    <h2>14. Governing Law and Disputes</h2>
+    <p>
+      These Terms shall be governed by and construed in accordance with the laws of the State of
+      [Your State], without regard to its conflict of law provisions. Any disputes arising from
+      these Terms or your use of our products shall be resolved exclusively in the state or federal
+      courts located in [Your County/State].
+    </p>
+
+    <h2>15. Severability</h2>
+    <p>
+      If any provision of these Terms is found to be unenforceable or invalid, that provision shall
+      be limited or eliminated to the minimum extent necessary, and the remaining provisions shall
+      remain in full force and effect.
+    </p>
+
+    <h2>16. Contact Information</h2>
+    <p>
+      For questions about these Terms of Service, please contact us:
+    </p>
+    <ul>
+      <li>Via our <a href="index.html#contact">Contact Form</a></li>
+      <li>Email: legal@apeximagegas.com</li>
+    </ul>
+
+    <div style="margin-top: 3rem; padding: 1.5rem; background: var(--surface); border-radius: 8px;">
+      <p style="margin: 0; font-size: 0.9rem; color: var(--muted);">
+        By using our website or purchasing our products, you acknowledge that you have read,
+        understood, and agree to be bound by these Terms of Service.
+      </p>
+    </div>
   </main>
 
-  <footer>
-    <p>&copy; 2024 Apex Gas. All rights reserved.</p>
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 Apex Image Gas. All rights reserved.</p>
+      <p style="margin-top: 0.5rem;">
+        <a href="index.html">Home</a> |
+        <a href="safety.html">Safety & Handling</a> |
+        <a href="privacy.html">Privacy Policy</a>
+      </p>
+    </div>
   </footer>
 </body>
 </html>

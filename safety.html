@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Safety & Handling - Apex Image Gas</title>
+  <link rel="icon" type="image/x-icon" href="images/apex_logo.png">
+  <link href="output.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --text: #0A0A0A;
+      --muted: #5A5F6A;
+      --primary: #0F766E;
+      --on-primary: #FFFFFF;
+      --border: #E5E7EB;
+      --surface: #F8FAFC;
+      --warning: #F59E0B;
+      --danger: #DC2626;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.625;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 16px;
+    }
+
+    .container { max-width: 900px; padding: 0 16px; margin: 0 auto; }
+
+    h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+    h2 { font-size: 1.75rem; font-weight: 700; margin: 2rem 0 1rem; color: var(--text); }
+    h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+    p { margin-bottom: 1rem; }
+    ul, ol { margin: 0 0 1rem 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+
+    .header {
+      background: #1e293b;
+      color: white;
+      padding: 1rem 0;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .header a { color: white; text-decoration: none; }
+    .header a:hover { text-decoration: underline; }
+
+    .warning-banner {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-left: 4px solid var(--warning);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .danger-box {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-left: 4px solid var(--danger);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-left: 4px solid #3b82f6;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .success-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-left: 4px solid #16a34a;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .hazard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .hazard-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .hazard-icon {
+      font-size: 3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .hazard-card h4 {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .hazard-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .section {
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .two-column { grid-template-columns: 1fr; }
+    }
+
+    .footer {
+      background: #1e293b;
+      color: #94a3b8;
+      padding: 2rem 0;
+      margin-top: 3rem;
+    }
+
+    .footer a { color: #60a5fa; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--surface);
+      font-weight: 600;
+    }
+
+    .emergency-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--danger);
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <img src="images/apex_logo.png" alt="Apex Image Gas" height="40" width="40">
+        <span style="font-size: 1.25rem; font-weight: bold;">APEX Image Gas</span>
+      </div>
+      <nav>
+        <a href="index.html">Back to Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 2rem 16px;">
+    <h1>Safety & Handling Information</h1>
+    <p style="font-size: 1.1rem; color: var(--muted);">
+      Important safety guidelines for EOS 3.5 X-Ray Machine Gas Bottles (Xenon/Ethane Mixture)
+    </p>
+
+    <div class="warning-banner">
+      <strong style="font-size: 1.1rem;">Important Notice:</strong>
+      <p style="margin: 0.5rem 0 0 0;">
+        This product is a high-pressure compressed gas intended for use in medical imaging equipment.
+        It must only be handled, transported, and installed by qualified personnel trained in compressed gas safety.
+      </p>
+    </div>
+
+    <!-- Hazard Identification -->
+    <section class="section">
+      <h2>Hazard Identification</h2>
+
+      <div class="hazard-grid">
+        <div class="hazard-card">
+          <div class="hazard-icon">⚠️</div>
+          <h4>Compressed Gas</h4>
+          <p>Contains gas under pressure. May explode if heated.</p>
+        </div>
+        <div class="hazard-card">
+          <div class="hazard-icon">💨</div>
+          <h4>Asphyxiant</h4>
+          <p>May displace oxygen and cause rapid suffocation in enclosed spaces.</p>
+        </div>
+        <div class="hazard-card">
+          <div class="hazard-icon">🔥</div>
+          <h4>Flammable Component</h4>
+          <p>Contains ethane. Keep away from heat, sparks, and open flames.</p>
+        </div>
+        <div class="hazard-card">
+          <div class="hazard-icon">🏥</div>
+          <h4>Medical Use Only</h4>
+          <p>For use in EOS 3.5 X-Ray machines by qualified biomedical personnel.</p>
+        </div>
+      </div>
+
+      <div class="danger-box">
+        <strong>GHS Hazard Statements:</strong>
+        <ul style="margin: 0.75rem 0 0 1.5rem;">
+          <li>H280: Contains gas under pressure; may explode if heated</li>
+          <li>H336: May cause drowsiness or dizziness (in high concentrations)</li>
+          <li>Simple asphyxiant - may displace oxygen in enclosed spaces</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Handling & Storage -->
+    <section class="section">
+      <h2>Handling & Storage</h2>
+
+      <div class="two-column">
+        <div>
+          <h3>Safe Handling Practices</h3>
+          <ul>
+            <li>Handle cylinders with care; do not drop, drag, or roll</li>
+            <li>Use appropriate cylinder carts or handling equipment</li>
+            <li>Keep cylinder valve closed when not in use</li>
+            <li>Never use damaged or corroded cylinders</li>
+            <li>Do not attempt to repair or modify cylinder valves</li>
+            <li>Use only compatible regulators and fittings</li>
+            <li>Open valve slowly to prevent pressure shock</li>
+            <li>Never use oil or grease on cylinder connections</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Storage Requirements</h3>
+          <ul>
+            <li>Store in well-ventilated areas</li>
+            <li>Keep upright and secured to prevent falling</li>
+            <li>Store away from heat sources, direct sunlight</li>
+            <li>Maintain temperature between 10°C - 40°C (50°F - 104°F)</li>
+            <li>Keep away from ignition sources and flammable materials</li>
+            <li>Separate from oxidizing gases</li>
+            <li>Ensure emergency access is not obstructed</li>
+            <li>Post appropriate warning signs</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>Personal Protective Equipment (PPE):</strong>
+        <ul style="margin: 0.75rem 0 0 1.5rem;">
+          <li>Safety glasses or goggles</li>
+          <li>Protective gloves when handling cylinders</li>
+          <li>Safety shoes with toe protection</li>
+          <li>Ensure adequate ventilation; use respiratory protection if ventilation is insufficient</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Installation Requirements -->
+    <section class="section">
+      <h2>Installation Requirements</h2>
+
+      <div class="danger-box">
+        <strong>Qualified Personnel Only:</strong>
+        <p style="margin: 0.5rem 0 0 0;">
+          Installation must be performed by qualified biomedical technicians or personnel trained in:
+        </p>
+        <ul style="margin: 0.75rem 0 0 1.5rem;">
+          <li>EOS imaging system maintenance and operation</li>
+          <li>Compressed gas cylinder handling and safety</li>
+          <li>Leak detection and testing procedures</li>
+          <li>Facility-specific safety protocols</li>
+        </ul>
+      </div>
+
+      <h3>Pre-Installation Checklist</h3>
+      <ul>
+        <li>Verify cylinder is undamaged and within certification date</li>
+        <li>Confirm gas mixture matches equipment specifications</li>
+        <li>Ensure adequate room ventilation</li>
+        <li>Have leak detection solution or equipment ready</li>
+        <li>Review equipment manufacturer's installation procedures</li>
+        <li>Notify relevant facility personnel of installation</li>
+      </ul>
+
+      <h3>Post-Installation Requirements</h3>
+      <ul>
+        <li>Perform leak test on all connections</li>
+        <li>Verify system pressure is within normal operating range</li>
+        <li>Document installation date and cylinder lot number</li>
+        <li>Dispose of packaging materials appropriately</li>
+        <li>Retain safety documentation for facility records</li>
+      </ul>
+    </section>
+
+    <!-- Emergency Procedures -->
+    <section class="section">
+      <h2>Emergency Procedures</h2>
+
+      <div class="danger-box">
+        <strong>In Case of Emergency:</strong>
+        <p class="emergency-number" style="margin: 0.5rem 0;">Call 911 or your local emergency services</p>
+      </div>
+
+      <div class="two-column">
+        <div>
+          <h3>Gas Leak Response</h3>
+          <ol>
+            <li>Evacuate personnel from the affected area immediately</li>
+            <li>Eliminate all ignition sources (no sparks, flames, or electrical switches)</li>
+            <li>Ventilate the area by opening doors and windows</li>
+            <li>If safe, close the cylinder valve</li>
+            <li>Do not re-enter until gas has dispersed and oxygen levels are verified safe</li>
+            <li>Contact Apex Image Gas for guidance on cylinder handling</li>
+          </ol>
+        </div>
+        <div>
+          <h3>Exposure First Aid</h3>
+          <p><strong>Inhalation (oxygen displacement):</strong></p>
+          <ul>
+            <li>Move person to fresh air immediately</li>
+            <li>If not breathing, administer artificial respiration</li>
+            <li>Keep person warm and at rest</li>
+            <li>Seek immediate medical attention</li>
+          </ul>
+          <p><strong>Symptoms of oxygen deficiency:</strong></p>
+          <ul>
+            <li>Rapid breathing, headache, dizziness</li>
+            <li>Confusion, loss of coordination</li>
+            <li>Nausea, fatigue</li>
+            <li>Loss of consciousness (severe cases)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>Fire Involvement:</strong>
+        <p style="margin: 0.5rem 0 0 0;">
+          If cylinders are exposed to fire: evacuate the area, call fire services, and inform them of the
+          presence of compressed gas cylinders. Do not attempt to move cylinders exposed to heat.
+          Cool cylinders with water spray from a safe distance if possible.
+        </p>
+      </div>
+    </section>
+
+    <!-- Product Specifications -->
+    <section class="section">
+      <h2>Product Specifications</h2>
+
+      <table>
+        <tr>
+          <th>Property</th>
+          <th>Specification</th>
+        </tr>
+        <tr>
+          <td>Product Name</td>
+          <td>Xenon/Ethane Gas Mixture for EOS 3.5</td>
+        </tr>
+        <tr>
+          <td>Composition</td>
+          <td>3.7% Ethane, Balance Xenon</td>
+        </tr>
+        <tr>
+          <td>Cylinder Volume</td>
+          <td>1 Liter</td>
+        </tr>
+        <tr>
+          <td>Purity Grade</td>
+          <td>Medical Grade</td>
+        </tr>
+        <tr>
+          <td>Physical State</td>
+          <td>Compressed Gas</td>
+        </tr>
+        <tr>
+          <td>Appearance</td>
+          <td>Colorless, odorless gas</td>
+        </tr>
+        <tr>
+          <td>Compatible Equipment</td>
+          <td>EOS 3.5 X-Ray Imaging System</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- Transport Information -->
+    <section class="section">
+      <h2>Transport Information</h2>
+
+      <div class="info-box">
+        <strong>DOT/UN Classification:</strong>
+        <ul style="margin: 0.75rem 0 0 1.5rem;">
+          <li>UN Number: UN1956 (Compressed gas, n.o.s.) or applicable classification</li>
+          <li>Hazard Class: 2.2 (Non-flammable gas)</li>
+          <li>Transport in accordance with DOT regulations for compressed gases</li>
+        </ul>
+      </div>
+
+      <h3>Transport Precautions</h3>
+      <ul>
+        <li>Secure cylinders to prevent movement during transport</li>
+        <li>Transport in well-ventilated vehicles</li>
+        <li>Keep cylinders upright when possible</li>
+        <li>Do not transport with incompatible materials</li>
+        <li>Protect from excessive heat and direct sunlight</li>
+        <li>Ensure valve protection caps are in place</li>
+      </ul>
+    </section>
+
+    <!-- Disposal -->
+    <section class="section">
+      <h2>Disposal Information</h2>
+
+      <p>
+        Empty cylinders may retain residual gas under pressure. Do not attempt to dispose of cylinders
+        through normal waste streams.
+      </p>
+
+      <h3>Disposal Procedure</h3>
+      <ul>
+        <li>Contact Apex Image Gas for return/exchange procedures</li>
+        <li>Do not puncture, crush, or incinerate cylinders</li>
+        <li>Follow local, state, and federal regulations for compressed gas cylinder disposal</li>
+        <li>Cylinders with residual product should be returned to supplier</li>
+      </ul>
+
+      <div class="success-box">
+        <strong>Cylinder Return Program:</strong>
+        <p style="margin: 0.5rem 0 0 0;">
+          We offer cylinder return services. Contact us to arrange pickup of empty cylinders
+          when ordering replacements.
+        </p>
+      </div>
+    </section>
+
+    <!-- Regulatory Information -->
+    <section class="section">
+      <h2>Regulatory & Compliance</h2>
+
+      <ul>
+        <li>Manufactured in compliance with applicable medical gas standards</li>
+        <li>Cylinders certified per DOT specifications</li>
+        <li>Each lot includes Certificate of Analysis</li>
+        <li>Traceability documentation maintained per ISO requirements</li>
+      </ul>
+
+      <div class="info-box">
+        <strong>Important Disclaimer:</strong>
+        <p style="margin: 0.5rem 0 0 0;">
+          Apex Image Gas is an independent supplier of compatible gas mixtures. We are not affiliated with,
+          endorsed by, or authorized by EOS Imaging or its parent companies. "EOS" is a trademark of its
+          respective owner. This product is manufactured to be compatible with EOS 3.5 systems based on
+          published specifications.
+        </p>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section">
+      <h2>Safety Questions & Contact</h2>
+
+      <p>
+        For questions regarding safety, handling, or emergency situations involving our products:
+      </p>
+
+      <div class="two-column">
+        <div class="info-box">
+          <strong>General Inquiries:</strong>
+          <p style="margin: 0.5rem 0 0 0;">
+            <a href="index.html#contact">Contact Us via Web Form</a><br>
+            Email: safety@apeximagegas.com
+          </p>
+        </div>
+        <div class="danger-box">
+          <strong>Emergency (24/7):</strong>
+          <p style="margin: 0.5rem 0 0 0;">
+            For gas emergencies, contact your local emergency services (911)<br>
+            Poison Control: 1-800-222-1222
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div style="margin-top: 2rem; padding: 1rem; background: var(--surface); border-radius: 8px; font-size: 0.9rem; color: var(--muted);">
+      <strong>Document Information:</strong><br>
+      Last Updated: January 2025<br>
+      This safety information is provided as general guidance. Always consult the Safety Data Sheet (SDS)
+      provided with your shipment for complete safety information specific to your product lot.
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 Apex Image Gas. All rights reserved.</p>
+      <p style="margin-top: 0.5rem;">
+        <a href="index.html">Home</a> |
+        <a href="terms.html">Terms of Service</a> |
+        <a href="privacy.html">Privacy Policy</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
